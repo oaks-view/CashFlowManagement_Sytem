@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Models
 {
-    interface IExpenditure
+    public interface IIncome
     {
         int Id { get; set; }
+        DateTime Date {get;set;}
         string Description { get; set; }
-        int Cost { get; set; }
-        DateTime GetDate();
-        void EditExpenditure(string description);
-        void EditExpenditure(int cost);
-        void EditExpenditure(string description, int cost);
+        int Amount { get; set; }
+        void EditIncome(string description);
+        void EditIncome(int cost);
+        void EditIncome(string description, int cost);
 
     }
 }
