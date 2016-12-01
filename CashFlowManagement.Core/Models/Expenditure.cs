@@ -21,6 +21,8 @@ namespace CashFlowManagement.Core
         }
         public string Description { get; set; }
         public int Cost { get; set; }
+        public int StaffId { get; set; }
+        public DateTime DateCreated { get; private set; }
         private DateTime _dateCreated;
 
         public Expenditure() { }//moses might remove this

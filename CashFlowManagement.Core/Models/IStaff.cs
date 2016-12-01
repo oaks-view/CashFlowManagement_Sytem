@@ -11,8 +11,8 @@ namespace CashFlowManagement.Core.Models
         int Id { get; set; }
         string FirstName { get; set; }
         string LastName { get; set; }
-        string Username { get; }
-        string Password { get; }
+        string Username { get; set; }
+        string Password { get; set; }
         StaffsCategory StaffCategory { get; }
 
     }

@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Models
 {
-    class Income
+    public class Income
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime DateCreated { get; set; }
         public string Description { get; set; }
         public int Amount { get; set; }
+        public int StaffId { get; set; }
         void EditIncome(string description)
         {
             this.Description = description;
