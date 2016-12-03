@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CashFlowManagement.Core;
+using CashFlowManagement.Core.Models;
 
 namespace CashFlowManagement.Tests
 {
@@ -10,10 +11,17 @@ namespace CashFlowManagement.Tests
         private Expenditure _expenditure;
         private string _expenditureDescription = "Milk";
         private int _expenditureCost = 4000;
+        private IStaff _staff;
         [TestInitialize]
         public void InitTest()
         {
-            _expenditure = new Expenditure(_expenditureDescription, _expenditureCost);
+            _staff = new Employee
+            {
+                Id = 1,
+                FirstName = "Moses",
+                LastName = "Scott",
+            };
+            _expenditure = new Expenditure(_expenditureDescription, _expenditureCost, _staff.Id);
             Assert.AreEqual(_expenditureDescription, _expenditure.Description);
             Assert.AreEqual(_expenditureCost, _expenditure.Cost);
         }
@@ -26,11 +34,10 @@ namespace CashFlowManagement.Tests
         }
 
         [TestMethod]
-        public void Confirm__dateCreated_Field_Is_Set_Once_Id_Property_Is_Set()
+        public void DateCreated_Property_Is_Set_When_Expenditure_Instantiated_With_The_Correct_Arguments()
         {
-            DateTime today = DateTime.Today;
-            _expenditure.Id = 2;
-            Assert.AreEqual(today.Month, _expenditure.GetDate().Month);
+            string today = DateTime.Now.ToString("yyyy-MM-dd HH");
+            Assert.AreEqual(today, _expenditure.DateCreated.ToString("yyyy-MM-dd HH"));
         }
 
         [TestMethod]
@@ -53,7 +60,7 @@ namespace CashFlowManagement.Tests
             Assert.AreEqual(_expenditure.Description, PreviousDescription);
         }
         [TestMethod]
-        public void Both_Cost_And_Description_Is_Changed_When_EditExpenditure_IsCalled()
+        public void Cost_And_Description_Is_Changed_When_EditExpenditure_Is_Called_With_String_And_Integer_Arguments()
         {
             var newCost = 2250;
             var newDescription = "Transportation";

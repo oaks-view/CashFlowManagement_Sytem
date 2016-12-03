@@ -11,7 +11,7 @@ namespace CashFlowManagement.Core.Models
         int Id { get; set; }
         string Description { get; set; }
         int Cost { get; set; }
-        DateTime GetDate();
+        DateTime DateCreated { get; set; }
         void EditExpenditure(string description);
         void EditExpenditure(int cost);
         void EditExpenditure(string description, int cost);
