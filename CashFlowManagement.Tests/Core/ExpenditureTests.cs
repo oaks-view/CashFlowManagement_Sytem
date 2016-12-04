@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CashFlowManagement.Core;
 using CashFlowManagement.Core.Models;
+using EmployeeManagement.Tests;
 
 namespace CashFlowManagement.Tests
 {
@@ -11,7 +12,7 @@ namespace CashFlowManagement.Tests
         private Expenditure _expenditure;
         private string _expenditureDescription = "Milk";
         private int _expenditureCost = 4000;
-        private IStaff _staff;
+        private IStaffEntity _staff;
         [TestInitialize]
         public void InitTest()
         {
@@ -26,21 +27,21 @@ namespace CashFlowManagement.Tests
             Assert.AreEqual(_expenditureCost, _expenditure.Cost);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Confirm_Creation_Of_Expenditure_Instance_Works_Correctly()
         {
             Assert.AreEqual(_expenditureDescription, _expenditure.Description);
             Assert.AreEqual(_expenditureCost, _expenditure.Cost);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void DateCreated_Property_Is_Set_When_Expenditure_Instantiated_With_The_Correct_Arguments()
         {
             string today = DateTime.Now.ToString("yyyy-MM-dd HH");
             Assert.AreEqual(today, _expenditure.DateCreated.ToString("yyyy-MM-dd HH"));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Only_Description_Is_Changed_When_EditExpenditure_Is_Called_With_String_Input()
         {
             int PreviousCost = _expenditure.Cost;
@@ -50,7 +51,7 @@ namespace CashFlowManagement.Tests
             Assert.AreEqual(_expenditure.Cost, PreviousCost);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Only_Cost_Is_Changed_When_EditExpenditure_Is_Called_With_Integer_Input()
         {
             int newCost = 3500;
@@ -59,7 +60,7 @@ namespace CashFlowManagement.Tests
             Assert.AreEqual(newCost, _expenditure.Cost);
             Assert.AreEqual(_expenditure.Description, PreviousDescription);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Cost_And_Description_Is_Changed_When_EditExpenditure_Is_Called_With_String_And_Integer_Arguments()
         {
             var newCost = 2250;

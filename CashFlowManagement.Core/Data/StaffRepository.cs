@@ -1,4 +1,5 @@
 ﻿using CashFlowManagement.Core.Data.DB;
+using CashFlowManagement.Core.Exceptions;
 using CashFlowManagement.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Data
 {
-    public class StaffRepository
+    public class StaffRepository:IStaffRepository
     {
         private CashFlowEntities _db;
 
@@ -17,16 +18,58 @@ namespace CashFlowManagement.Core.Data
             _db = new CashFlowEntities();
         }
 
-        public void SaveEmployeeToDatabase(IStaff employee)
+        public StaffRepository(CashFlowEntities context)
         {
-            Staff Employee = new Staff();
-            Employee.FirstName = employee.FirstName;
-            Employee.LastName = employee.LastName;
-            Employee.Username = employee.Username;
-            Employee.Password = employee.Password;
+            _db = context;
+        }
 
-            _db.Staffs.Add(Employee);
-            _db.SaveChanges();
+        public void Create(IStaffEntity companyStaff)
+        {
+            Staff CompanyStaff = new Staff();
+            CompanyStaff.FirstName = companyStaff.FirstName;
+            CompanyStaff.LastName = companyStaff.LastName;
+            CompanyStaff.Username = companyStaff.Username;
+            CompanyStaff.Password = companyStaff.Password;
+            CompanyStaff.StaffCategory = companyStaff.StaffCategory;
+
+            _db.Staffs.Add(CompanyStaff);
+            try
+            {
+                _db.SaveChanges();
+            }
+
+            catch (Exception e)
+            {
+                DBExceptionsHandler.HandleException(e);
+            }
+        }
+
+        public void Update(IStaffEntity companyStaff)
+        {
+            Staff dbStaff = GetStaff(companyStaff.Id);
+            dbStaff.FirstName = companyStaff.FirstName;
+            dbStaff.LastName = companyStaff.LastName;
+
+        }
+        public Staff GetStaff(int Id)//moses would probably remove if never used
+        {
+            return _db.Staffs.Find(Id);
+        }
+        public Staff GetStaff(string username)
+        {
+            Staff staff = _db.Staffs
+                 .Where(x => x.Username == username)
+                 .Select(x => x).SingleOrDefault();
+            if (staff == null)
+            {
+                throw new NoMatchFound();
+            }
+            return staff;
+        }
+
+        public List<Staff> GetAllStaffs()
+        {
+            return _db.Staffs.ToList();
         }
     }
 }

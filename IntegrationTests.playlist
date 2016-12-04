@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="CashFlowManagement.Tests.Core.repositories.StaffRepositoryTests.Can_Successfully_Create_Staff_In_Database" /><Add Test="CashFlowManagement.Tests.Core.repositories.StaffRepositoryTests.Throws_Exception_When_Staff_With_Username_Already_Exists_In_Database" /></Playlist>

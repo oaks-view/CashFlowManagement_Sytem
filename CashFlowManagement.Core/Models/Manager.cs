@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Models
 {
-    public class Manager:IStaff
+    public class Manager:IStaffEntity
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -14,11 +14,11 @@ namespace CashFlowManagement.Core.Models
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public StaffsCategory StaffCategory { get; private set; }
+        public int StaffCategory { get; private set; }
 
         public Manager()
         {
-            StaffCategory = StaffsCategory.Manager;
+            StaffCategory = (int)StaffsCategory.Manager;
         }
 
     }

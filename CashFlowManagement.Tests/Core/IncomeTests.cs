@@ -1,13 +1,14 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CashFlowManagement.Core.Models;
+using EmployeeManagement.Tests;
 
 namespace CashFlowManagement.Tests.Core
 {
     [TestClass]
     public class IncomeEntityTests
     {
-        private IStaff _staff;
+        private IStaffEntity _staff;
         private IncomeEntity _income;
         [TestInitialize]
         public void TestInit()
@@ -22,13 +23,13 @@ namespace CashFlowManagement.Tests.Core
             _income = new IncomeEntity("Bank Interest", 30000, _staff.Id);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void DateCreated_Property_Is_Set_When_IncomeEntity_Is_Innstantiated_With_The_Correct_Arguments()
         {
             string today = DateTime.Now.ToString("yyyy-MM-dd HH");
             Assert.AreEqual(today, _income.DateCreated.ToString("yyyy-MM-dd HH"));
         }
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Only_Description_Property_Is_Changed_When_A_String_Argument_Is_Passed_To_EditIncome()
         {
             int previousIncomeAmount = _income.Amount;
@@ -37,7 +38,7 @@ namespace CashFlowManagement.Tests.Core
             Assert.AreEqual("Goods Payment", _income.Description);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Only_Amount_Property_Is_Changed_When_An_Int_Argument_Is_Passed_To_EditIncome()
         {
             string previousIncomeDescription = _income.Description;
@@ -45,7 +46,7 @@ namespace CashFlowManagement.Tests.Core
             Assert.AreEqual(previousIncomeDescription, _income.Description);
             Assert.AreEqual(98000, _income.Amount);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(Constants.UnitTest)]
         public void Description_And_Amount_Is_Changed_When_Both_Integer_And_String_Arguments_Are_Passed_To_EditIncome()
         {
             _income.EditIncome("New Sales", 450000);

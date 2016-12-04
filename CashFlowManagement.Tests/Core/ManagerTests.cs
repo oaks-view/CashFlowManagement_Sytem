@@ -1,23 +1,24 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CashFlowManagement.Core.Models;
+using EmployeeManagement.Tests;
 
 namespace CashFlowManagement.Tests.Core
 {
     [TestClass]
     public class ManagerTests
     {
-        [TestMethod]
-        public void StaffCategory_Property_Is_Set__When_Manager_Instance_Is_Created()//moses modify testmethod name
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void StaffCategory_Property_Is_Set__When_Manager_Instance_Is_Created()
         {
-            IStaff manager = new Manager
+            IStaffEntity manager = new Manager
             {
                 Id = 1,
                 FirstName = "Moses",
                 LastName = "Scott",
             };
             var staffCategory = (int)StaffsCategory.Manager;
-            Assert.AreEqual(staffCategory, (int)manager.StaffCategory);
+            Assert.AreEqual(staffCategory, manager.StaffCategory);
         }
     }
 }

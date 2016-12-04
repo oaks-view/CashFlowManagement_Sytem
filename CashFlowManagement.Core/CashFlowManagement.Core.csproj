@@ -75,13 +75,20 @@
     <Compile Include="Data\DB\Staff.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Data\IIncomeRepository.cs" />
+    <Compile Include="Data\IncomeRepository.cs" />
+    <Compile Include="Data\IStaffRepository.cs" />
     <Compile Include="Data\StaffRepository.cs" />
+    <Compile Include="Exceptions\DatabaseAccessException.cs" />
+    <Compile Include="Exceptions\DBExceptionsHandler.cs" />
+    <Compile Include="Exceptions\UsernameExistsException.cs" />
+    <Compile Include="Exceptions\NoMatchFound.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Expenditure.cs" />
     <Compile Include="Models\IExpenditure.cs" />
     <Compile Include="Models\IIncome.cs" />
     <Compile Include="Models\IncomeEntity.cs" />
-    <Compile Include="Models\IStaff.cs" />
+    <Compile Include="Models\IStaffEntity.cs" />
     <Compile Include="Models\Manager.cs" />
     <Compile Include="Models\StaffsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

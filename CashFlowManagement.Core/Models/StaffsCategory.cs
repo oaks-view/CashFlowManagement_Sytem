@@ -8,7 +8,8 @@ namespace CashFlowManagement.Core.Models
 {
     public enum StaffsCategory
     {
-        Employee = 0,
-        Manager = 1
+        None = 0,
+        Employee = 2244,
+        Manager = 3366
     }
 }
