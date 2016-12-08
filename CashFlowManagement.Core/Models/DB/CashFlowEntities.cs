@@ -1,13 +1,18 @@
+using System;
+using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using CashFlowManagement.Core.Models.DB.Mappings;
+
 namespace CashFlowManagement.Core.Models.DB
 {
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using Mappings;
-
     public class CashFlowEntities : DbContext
     {
+        static CashFlowEntities()
+        {
+            Database.SetInitializer<CashFlowEntities>(null);
+        }
+
         public CashFlowEntities()
             : base("name=CashFlowDb")
         {
