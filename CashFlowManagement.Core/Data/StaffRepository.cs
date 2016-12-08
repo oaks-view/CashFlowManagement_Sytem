@@ -12,6 +12,7 @@ namespace CashFlowManagement.Core.Data
     public class StaffRepository:IStaffRepository,IDisposable
     {
         private CashFlowEntities _db;
+        private readonly bool _externalContext;
 
         public StaffRepository()
         {
@@ -21,6 +22,7 @@ namespace CashFlowManagement.Core.Data
         public StaffRepository(CashFlowEntities context)
         {
             _db = context;
+            _externalContext = true;
         }
 
         public void Create(Staff staff)
@@ -67,7 +69,7 @@ namespace CashFlowManagement.Core.Data
 
         public void Dispose()
         {
-            if (_db == null)
+            if (_db == null || _externalContext)
             {
                 return;
             }

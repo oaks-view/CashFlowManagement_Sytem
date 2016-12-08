@@ -12,13 +12,16 @@ namespace CashFlowManagement.Core.Data
     public class ExpenseRepository:IExpenseRepository,IDisposable
     {
         private CashFlowEntities _db;
+        private readonly bool _externalContext;
+
         public ExpenseRepository()
         {
             _db = new CashFlowEntities();
         }
         public ExpenseRepository(CashFlowEntities context)
         {
-            _db = new CashFlowEntities();
+            _db = context;
+            _externalContext = true;
         }
 
         public void Create(Expense expense)
@@ -59,7 +62,7 @@ namespace CashFlowManagement.Core.Data
 
         public void Dispose()
         {
-            if (_db == null)
+            if (_db == null || _externalContext)
             {
                 return;
             }
