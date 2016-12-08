@@ -64,6 +64,7 @@ namespace CashFlowManagement.Core.Data
                 return;
             }
             _db.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

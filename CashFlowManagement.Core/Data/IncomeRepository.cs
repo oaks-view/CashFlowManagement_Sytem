@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Data.DB
 {
-    public class IncomeRepository:IIncomeRepository
+    public class IncomeRepository:IIncomeRepository,IDisposable
     {
         CashFlowEntities _db;
         public IncomeRepository()
@@ -48,6 +48,16 @@ namespace CashFlowManagement.Core.Data.DB
             income.Description = incomeData.Description;
             income.Amount = incomeData.Amount;
             _db.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            if (_db == null)
+            {
+                return;
+            }
+            _db.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

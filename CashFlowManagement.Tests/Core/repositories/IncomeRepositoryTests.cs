@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using CashFlowManagement.Core.Exceptions;
 using CashFlowManagement.Core.Models.DB;
+using static CashFlowManagement.Tests.Core.TestData;
 
 namespace CashFlowManagement.Tests.Core.repositories
 {
@@ -24,43 +25,76 @@ namespace CashFlowManagement.Tests.Core.repositories
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Successfully_Create_New_Income_In_DataBase()
         {
-            Income incomeData = new Income();
-            _repo.Create(incomeData);
-            Income savedIncome = _context.Incomes
-                .Where(x => x.Description == "Subscription Revenue").Single();
-            Assert.IsNotNull(savedIncome);
+            using (CashFlowEntities context = new CashFlowEntities())
+            using (var repo = new IncomeRepository(context))
+            using (var staffRepo = new StaffRepository(context))
+            using (DbContextTransaction transaction = context.Database.BeginTransaction())
+            {
+                context.Staffs.Add(sampleManager);
+                context.SaveChanges();
+                Staff manager = staffRepo.GetStaff(sampleManager.Username);
+                Income income = new Income("Web_Advertisment", 3000, manager.Id);
+                repo.Create(income);
+                var dbIncome = manager.Incomes.SingleOrDefault();
+                Assert.AreEqual(3000, dbIncome.Amount);
+                transaction.Rollback();
+            }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Get_Staff_From_Saved_Income()
         {
-            Income incomeData = new Income();
-            _repo.Create(incomeData);
-            Income savedIncome = _context.Incomes
-                .Where(x => x.Description == "Subscription Revenue").Single();
-            var incomeCreator = savedIncome.Staff;
-            Assert.AreEqual(_managerDependency.FirstName, incomeCreator.FirstName);
+            using (CashFlowEntities context = new CashFlowEntities())
+            using (var repo = new IncomeRepository(context))
+            using (var staffRepo = new StaffRepository(context))
+            using (DbContextTransaction transaction = context.Database.BeginTransaction())
+            {
+                staffRepo.Create(sampleManager);
+                Staff manager = context.Staffs.FirstOrDefault();
+                Income income = new Income("Wesite_Traffic", 3000, manager.Id);
+                repo.Create(income);
+                Income retrievedIncome = context.Incomes.SingleOrDefault();
+                Assert.AreEqual(sampleManager.Username, retrievedIncome.Staff.Username);
+                transaction.Rollback();
+            }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_Saved_Income_From_Database()
         {
-            Income incomeData = new Income();
-            _repo.Create(incomeData);
-            int incomeId = _context.Incomes
-                .Where(x => x.Description == "Subscription Revenue").Single().Id;
-            Income savedIncome = _repo.GetIncome(incomeId);
-            Assert.IsNotNull(savedIncome);
+            using (CashFlowEntities context = new CashFlowEntities())
+            using (var repo = new IncomeRepository(context))
+            using (var staffRepo = new StaffRepository(context))
+            using (DbContextTransaction transaction = context.Database.BeginTransaction())
+            {
+                context.Staffs.Add(sampleManager);
+                context.SaveChanges();
+                Staff manager = staffRepo.GetStaff(sampleManager.Username);
+                Income income = new Income("Web_Adverts", 2300, manager.Id);
+                context.Incomes.Add(income);
+                context.SaveChanges();
+                Income retrievedIncome = repo.GetIncome(manager.Incomes.SingleOrDefault().Id);
+                Assert.AreEqual(2300, retrievedIncome.Amount);
+            }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_DateCreated_From_Saved_Income()
         {
-            Income incomeData = new Income();
-            _repo.Create(incomeData);
-            Income savedIncome = _context.Incomes
-                .Where(x => x.Description == "Subscription Revenue").Single();
-            Assert.AreEqual(DateTime.Now.Month, savedIncome.DateCreated.Month);
+            using (CashFlowEntities context = new CashFlowEntities())
+            using (var repo = new IncomeRepository(context))
+            using (var staffRepo = new StaffRepository(context))
+            using (DbContextTransaction transaction = context.Database.BeginTransaction())
+            {
+                staffRepo.Create(sampleManager);
+                Staff manager = context.Staffs.SingleOrDefault();
+                Income income = new Income("IMF_Grant", 45000, manager.Id);
+                string currentDate = DateTime.Now.ToString("yyyy-MM-dd-HH");
+                repo.Create(income);
+                Income retrievedIncome = manager.Incomes.SingleOrDefault();
+                Assert.AreEqual(currentDate, retrievedIncome.DateCreated.ToString("yyyy-MM-dd-HH"));
+                transaction.Rollback();
+            }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]

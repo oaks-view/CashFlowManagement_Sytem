@@ -25,7 +25,7 @@ namespace CashFlowManagement.Tests.Core.repositories
             {
                 context.Staffs.Add(sampleEmployee);
                 context.SaveChanges();
-                Staff employee = context.Staffs.Where(x => x.Username == sampleEmployee.Username).Single();
+                Staff employee = context.Staffs.Where(x => x.Username == sampleEmployee.Username).SingleOrDefault();
                 Expense staffExpense = new Expense
                 (
                     "Unitest_Expenses",
@@ -34,7 +34,7 @@ namespace CashFlowManagement.Tests.Core.repositories
                 );
                 employee.Expenses.Add(staffExpense);
                 context.SaveChanges();
-                Expense queryObj = context.Expenses.Single();
+                Expense queryObj = context.Expenses.SingleOrDefault();
                 Assert.AreEqual("Unitest_Expenses", queryObj.Description);
                 Assert.AreEqual(employee.Id, queryObj.StaffId);
                 transaction.Rollback();

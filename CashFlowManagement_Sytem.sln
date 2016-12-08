@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashFlowManagement.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashFlowManagement.Web", "CashFlowManagement.Web\CashFlowManagement.Web.csproj", "{A353C51C-2DC2-4A1D-99CF-CA96544BE83E}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CashFlowManagement.Database", "CashFlowManagement.Database\CashFlowManagement.Database.sqlproj", "{6594F38D-EEE6-44BB-82FB-6E871F673591}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{A353C51C-2DC2-4A1D-99CF-CA96544BE83E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A353C51C-2DC2-4A1D-99CF-CA96544BE83E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A353C51C-2DC2-4A1D-99CF-CA96544BE83E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6594F38D-EEE6-44BB-82FB-6E871F673591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6594F38D-EEE6-44BB-82FB-6E871F673591}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6594F38D-EEE6-44BB-82FB-6E871F673591}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6594F38D-EEE6-44BB-82FB-6E871F673591}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6594F38D-EEE6-44BB-82FB-6E871F673591}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6594F38D-EEE6-44BB-82FB-6E871F673591}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
