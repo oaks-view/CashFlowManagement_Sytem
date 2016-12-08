@@ -51,30 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DB\Expens.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DB\Income.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DB\Model1.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DB\Model1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DB\Model1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DB\Staff.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Data\ExpenseRepository.cs" />
+    <Compile Include="Data\IExpenseRepository.cs" />
     <Compile Include="Data\IIncomeRepository.cs" />
     <Compile Include="Data\IncomeRepository.cs" />
     <Compile Include="Data\IStaffRepository.cs" />
@@ -83,39 +61,17 @@
     <Compile Include="Exceptions\DBExceptionsHandler.cs" />
     <Compile Include="Exceptions\UsernameExistsException.cs" />
     <Compile Include="Exceptions\NoMatchFound.cs" />
-    <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Expenditure.cs" />
-    <Compile Include="Models\IExpenditure.cs" />
-    <Compile Include="Models\IIncome.cs" />
-    <Compile Include="Models\IncomeEntity.cs" />
-    <Compile Include="Models\IStaffEntity.cs" />
-    <Compile Include="Models\Manager.cs" />
+    <Compile Include="Models\DB\CashFlowEntities.cs" />
+    <Compile Include="Models\DB\Expense.cs" />
+    <Compile Include="Models\DB\Income.cs" />
+    <Compile Include="Models\DB\Staff.cs" />
     <Compile Include="Models\StaffsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Data\DB\Model1.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Data\DB\Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Data\DB\Model1.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Data\DB\Model1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

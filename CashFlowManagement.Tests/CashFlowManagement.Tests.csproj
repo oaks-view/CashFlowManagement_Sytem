@@ -62,13 +62,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Core\ExpenditureTests.cs" />
-    <Compile Include="Core\EmployeeTests.cs" />
-    <Compile Include="Core\ManagerTests.cs" />
     <Compile Include="Core\IncomeTests.cs" />
     <Compile Include="Core\repositories\StaffRepositoryTests.cs" />
     <Compile Include="Core\repositories\IncomeRepositoryTests.cs" />
+    <Compile Include="Core\repositories\ExpenseRepositoryTests.cs" />
     <Compile Include="Core\TestData.cs" />
+    <Compile Include="Core\StaffTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

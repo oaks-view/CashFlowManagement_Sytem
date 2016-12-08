@@ -1,5 +1,6 @@
 ﻿using CashFlowManagement.Core.Exceptions;
 using CashFlowManagement.Core.Models;
+using CashFlowManagement.Core.Models.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +21,9 @@ namespace CashFlowManagement.Core.Data.DB
         {
             _db = context;
         }
-        public void Create(IncomeEntity incomeEntity)
+        public void Create(Income income)
         {
-            Income newIncome = new Income
-            {
-                Description = incomeEntity.Description,
-                Amount = incomeEntity.Amount,
-                StaffId = incomeEntity.StaffId,
-                DateCreated = incomeEntity.DateCreated
-            };
-            _db.Incomes.Add(newIncome);
+            _db.Incomes.Add(income);
             _db.SaveChanges();
         }
 
@@ -46,6 +40,14 @@ namespace CashFlowManagement.Core.Data.DB
         public List<Income> GetAllIncome()
         {
             return _db.Incomes.ToList<Income>();
+        }
+
+        public void Update(Income incomeData)
+        {
+            Income income = GetIncome(incomeData.Id);
+            income.Description = incomeData.Description;
+            income.Amount = incomeData.Amount;
+            _db.SaveChanges();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using CashFlowManagement.Core.Data.DB;
-using CashFlowManagement.Core.Exceptions;
+﻿using CashFlowManagement.Core.Exceptions;
 using CashFlowManagement.Core.Models;
+using CashFlowManagement.Core.Models.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Data
 {
-    public class StaffRepository:IStaffRepository
+    public class StaffRepository:IStaffRepository,IDisposable
     {
         private CashFlowEntities _db;
 
@@ -23,16 +23,9 @@ namespace CashFlowManagement.Core.Data
             _db = context;
         }
 
-        public void Create(IStaffEntity companyStaff)
+        public void Create(Staff staff)
         {
-            Staff CompanyStaff = new Staff();
-            CompanyStaff.FirstName = companyStaff.FirstName;
-            CompanyStaff.LastName = companyStaff.LastName;
-            CompanyStaff.Username = companyStaff.Username;
-            CompanyStaff.Password = companyStaff.Password;
-            CompanyStaff.StaffCategory = companyStaff.StaffCategory;
-
-            _db.Staffs.Add(CompanyStaff);
+            _db.Staffs.Add(staff);
             try
             {
                 _db.SaveChanges();
@@ -44,7 +37,7 @@ namespace CashFlowManagement.Core.Data
             }
         }
 
-        public void Update(IStaffEntity companyStaff)
+        public void Update(Staff companyStaff)
         {
             Staff dbStaff = GetStaff(companyStaff.Id);
             dbStaff.FirstName = companyStaff.FirstName;
@@ -70,6 +63,15 @@ namespace CashFlowManagement.Core.Data
         public List<Staff> GetAllStaffs()
         {
             return _db.Staffs.ToList();
+        }
+
+        public void Dispose()
+        {
+            if (_db == null)
+            {
+                return;
+            }
+            _db.Dispose();
         }
     }
 }

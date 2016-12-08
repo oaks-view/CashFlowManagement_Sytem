@@ -7,6 +7,7 @@ using CashFlowManagement.Core.Models;
 using System.Data.Entity;
 using System.Linq;
 using CashFlowManagement.Core.Exceptions;
+using CashFlowManagement.Core.Models.DB;
 
 namespace CashFlowManagement.Tests.Core.repositories
 {
@@ -19,29 +20,11 @@ namespace CashFlowManagement.Tests.Core.repositories
         private IStaffRepository _staffRepo;
         Staff _managerDependency;
 
-        [TestInitialize]
-        public void BeforeEachTest()
-        {
-            _context = new CashFlowEntities();
-            _repo = new IncomeRepository(_context);
-            _staffRepo = new StaffRepository(_context);
-            _transaction = _context.Database.BeginTransaction();
-            _staffRepo.Create(TestData.sampleManager);
-            _managerDependency = _staffRepo.GetStaff(TestData.sampleManager.Username);
-        }
-
-        [TestCleanup]
-        public void AfterEachTest()
-        {
-            _transaction.Rollback();
-            _transaction.Dispose();
-            _context.Dispose();
-        }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Successfully_Create_New_Income_In_DataBase()
         {
-            IncomeEntity incomeData = new IncomeEntity("Subscription Revenue", 3200, _managerDependency.Id);
+            Income incomeData = new Income();
             _repo.Create(incomeData);
             Income savedIncome = _context.Incomes
                 .Where(x => x.Description == "Subscription Revenue").Single();
@@ -51,7 +34,7 @@ namespace CashFlowManagement.Tests.Core.repositories
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Get_Staff_From_Saved_Income()
         {
-            IncomeEntity incomeData = new IncomeEntity("Subscription Revenue", 3200, _managerDependency.Id);
+            Income incomeData = new Income();
             _repo.Create(incomeData);
             Income savedIncome = _context.Incomes
                 .Where(x => x.Description == "Subscription Revenue").Single();
@@ -62,7 +45,7 @@ namespace CashFlowManagement.Tests.Core.repositories
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_Saved_Income_From_Database()
         {
-            IncomeEntity incomeData = new IncomeEntity("Subscription Revenue", 3200, _managerDependency.Id);
+            Income incomeData = new Income();
             _repo.Create(incomeData);
             int incomeId = _context.Incomes
                 .Where(x => x.Description == "Subscription Revenue").Single().Id;
@@ -71,8 +54,18 @@ namespace CashFlowManagement.Tests.Core.repositories
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
+        public void Can_Retrieve_DateCreated_From_Saved_Income()
+        {
+            Income incomeData = new Income();
+            _repo.Create(incomeData);
+            Income savedIncome = _context.Incomes
+                .Where(x => x.Description == "Subscription Revenue").Single();
+            Assert.AreEqual(DateTime.Now.Month, savedIncome.DateCreated.Month);
+        }
+
+        [TestMethod, TestCategory(Constants.IntegrationTest)]
         [ExpectedException(typeof(NoMatchFound))]
-        public void Throw_Exception_If_Income_Dies_Not_Exist()
+        public void Throw_Exception_If_Income_Does_Not_Exist()
         {
             var incomeInstance = _repo.GetIncome(000);
         }
@@ -80,12 +73,26 @@ namespace CashFlowManagement.Tests.Core.repositories
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_All_Saved_Income_From_Database()
         {
-            IncomeEntity incomeData = new IncomeEntity("Subscription Revenue", 3200, _managerDependency.Id);
+            Income incomeData = new Income();
             int prevIncomeCount = _context.Incomes.Count();
             _repo.Create(incomeData);
             _repo.Create(incomeData);
             var allIncomes = _repo.GetAllIncome();
             Assert.AreEqual(prevIncomeCount + 2, allIncomes.Count);
+        }
+
+        [TestMethod, TestCategory(Constants.IntegrationTest)]
+        public void Can_Update_Saved_Income()
+        {
+            Income incomeData = new Income();
+            _repo.Create(incomeData);
+            
+            incomeData.Id = _context.Incomes
+                .Where(x => x.Description == "Subscription Revenue").Single().Id;
+            _repo.Update(incomeData);
+            Income updatedIncome = _context.Incomes
+                .Where(x => x.Description == "Website Advertisement").Single();
+            Assert.AreEqual(24000, updatedIncome.Amount);
         }
     }
 }
