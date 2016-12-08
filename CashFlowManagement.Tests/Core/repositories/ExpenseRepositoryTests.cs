@@ -15,17 +15,37 @@ namespace CashFlowManagement.Tests.Core.repositories
     [TestClass]
     public class ExpenseRepositoryTests
     {
+        private CashFlowEntities _context;
+        private DbContextTransaction _transaction;
+
+        [TestInitialize]
+        public void BeforeEach()
+        {
+            _context = new CashFlowEntities();
+            _transaction = _context.Database.BeginTransaction();
+        }
+
+        [TestCleanup]
+        public void AfterEach()
+        {
+            var expenses = _context.Expenses.ToList();
+
+            _context.Expenses.RemoveRange(expenses);
+            _context.SaveChanges();
+
+            _transaction.Rollback();
+            _transaction.Dispose();
+            _context.Dispose();
+        }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Save_New_Expense_To_Database()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new ExpenseRepository(context))
-            using (DbContextTransaction transaction = context.Database.BeginTransaction())
+            using (var repo = new ExpenseRepository(_context))
             {
-                context.Staffs.Add(sampleEmployee);
-                context.SaveChanges();
-                Staff employee = context.Staffs.Where(x => x.Username == sampleEmployee.Username).SingleOrDefault();
+                _context.Staffs.Add(sampleEmployee);
+                _context.SaveChanges();
+                Staff employee = _context.Staffs.Where(x => x.Username == sampleEmployee.Username).SingleOrDefault();
                 Expense staffExpense = new Expense
                 (
                     "Unitest_Expenses",
@@ -33,24 +53,21 @@ namespace CashFlowManagement.Tests.Core.repositories
                     employee.Id
                 );
                 employee.Expenses.Add(staffExpense);
-                context.SaveChanges();
-                Expense queryObj = context.Expenses.SingleOrDefault();
+                _context.SaveChanges();
+                Expense queryObj = _context.Expenses.SingleOrDefault();
                 Assert.AreEqual("Unitest_Expenses", queryObj.Description);
                 Assert.AreEqual(employee.Id, queryObj.StaffId);
-                transaction.Rollback();
             }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_Saved_Expense_From_Database()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new ExpenseRepository(context))
-            using (DbContextTransaction transaction = context.Database.BeginTransaction())
+            using (var repo = new ExpenseRepository(_context))
             {
-                context.Staffs.Add(sampleEmployee);
-                context.SaveChanges();
-                Staff employee = context.Staffs.Where(x => x.Username == sampleEmployee.Username).Single();
+                _context.Staffs.Add(sampleEmployee);
+                _context.SaveChanges();
+                Staff employee = _context.Staffs.Where(x => x.Username == sampleEmployee.Username).Single();
                 Expense staffExpense = new Expense
                 (
                     "Unitest_Expenses",
@@ -59,66 +76,56 @@ namespace CashFlowManagement.Tests.Core.repositories
                 );
 
                 employee.Expenses.Add(staffExpense);
-                context.SaveChanges();
-                Expense queryObj = repo.GetExpense(context.Expenses.Single().Id);
-                transaction.Rollback();
+                _context.SaveChanges();
+                Expense queryObj = repo.GetExpense(_context.Expenses.Single().Id);
             }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_All_Expenses_From_Database()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new ExpenseRepository(context))
-            using (var transaction = context.Database.BeginTransaction())
+            using (var repo = new ExpenseRepository(_context))
             {
-                context.Staffs.Add(sampleManager);
-                context.SaveChanges();
-                var staff = context.Staffs.Single();
+                _context.Staffs.Add(sampleManager);
+                _context.SaveChanges();
+                var staff = _context.Staffs.Single();
                 repo.Create(new Expense("E1", 2000, staff.Id));
                 repo.Create(new Expense("E2", 32000, staff.Id));
                 var allExpenses = repo.GetAllExpenses();
                 Assert.AreEqual(2, allExpenses.Count);
-                transaction.Rollback();
             }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Edit_Saved_Expenses()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new ExpenseRepository(context))
-            using (var transaction = context.Database.BeginTransaction())
+            using (var repo = new ExpenseRepository(_context))
             {
-                context.Staffs.Add(sampleManager);
-                context.SaveChanges();
-                var staff = context.Staffs.Single();
+                _context.Staffs.Add(sampleManager);
+                _context.SaveChanges();
+                var staff = _context.Staffs.Single();
                 repo.Create(new Expense("E1", 2000, staff.Id));
-                Expense expense = context.Expenses.Single();
+                Expense expense = _context.Expenses.Single();
                 repo.Update("Test_Expenditure", 45000, expense.Id);
-                Assert.IsNotNull(context.Expenses.Where(x => x.Description == "Test_Expenditure").Single());
-                transaction.Rollback();
+                Assert.IsNotNull(_context.Expenses.Where(x => x.Description == "Test_Expenditure").Single());
             }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Delete_Saved_Expense_From_DataBase()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new ExpenseRepository(context))
-            using (var transaction = context.Database.BeginTransaction())
+            using (var repo = new ExpenseRepository(_context))
             {
-                context.Staffs.Add(sampleManager);
-                context.SaveChanges();
-                var staff = context.Staffs.Single();
+                _context.Staffs.Add(sampleManager);
+                _context.SaveChanges();
+                var staff = _context.Staffs.Single();
                 repo.Create(new Expense("E1", 2000, staff.Id));
                 repo.Create(new Expense("E2", 2000, staff.Id));
-                Assert.IsTrue(context.Expenses.Count() == 2);
+                Assert.IsTrue(_context.Expenses.Count() == 2);
 
-                Expense expense = context.Expenses.First();
+                Expense expense = _context.Expenses.First();
                 repo.Delete(expense.Id);
-                Assert.AreEqual(1, context.Expenses.Count());
-                transaction.Rollback();
+                Assert.AreEqual(1, _context.Expenses.Count());
             }
         }
     }
