@@ -99,20 +99,5 @@ namespace CashFlowManagement.Tests.Core.repositories
                 var staff = repo.GetStaff(fakeUsername);
             }
         }
-
-        [TestMethod, TestCategory(Constants.IntegrationTest)]
-        public void Throws_Exception_If_Username_Is_Not_Specified()
-        {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new StaffRepository(context))
-            using (DbContextTransaction transaction = context.Database.BeginTransaction())
-            {
-                Staff newStaff = new Staff
-                {
-                };
-                repo.Create(newStaff);
-                transaction.Rollback();
-            }
-        }
     }
 }

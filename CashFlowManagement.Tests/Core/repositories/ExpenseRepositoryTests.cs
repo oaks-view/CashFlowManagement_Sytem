@@ -106,7 +106,7 @@ namespace CashFlowManagement.Tests.Core.repositories
         {
             using (CashFlowEntities context = new CashFlowEntities())
             using (var repo = new ExpenseRepository(context))
-            //using (var transaction = context.Database.BeginTransaction())
+            using (var transaction = context.Database.BeginTransaction())
             {
                 context.Staffs.Add(sampleManager);
                 context.SaveChanges();
@@ -118,7 +118,7 @@ namespace CashFlowManagement.Tests.Core.repositories
                 Expense expense = context.Expenses.First();
                 repo.Delete(expense.Id);
                 Assert.AreEqual(1, context.Expenses.Count());
-                //transaction.Rollback();
+                transaction.Rollback();
             }
         }
     }

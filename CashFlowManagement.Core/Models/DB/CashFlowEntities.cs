@@ -4,6 +4,7 @@ namespace CashFlowManagement.Core.Models.DB
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using Mappings;
 
     public class CashFlowEntities : DbContext
     {
@@ -18,18 +19,9 @@ namespace CashFlowManagement.Core.Models.DB
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Staff>()
-                .Property(x => x.Username).IsRequired();
-
-            modelBuilder.Entity<Staff>()
-                .HasMany(e => e.Expenses)
-                .WithRequired(e => e.Staff)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Staff>()
-                .HasMany(e => e.Incomes)
-                .WithRequired(e => e.Staff)
-                .WillCascadeOnDelete(false);
+            modelBuilder.Configurations.Add(new StaffMap());
+            modelBuilder.Configurations.Add(new ExpenseMap());
+            modelBuilder.Configurations.Add(new IncomeMap());
         }
     }
 }

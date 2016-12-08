@@ -64,6 +64,9 @@
     <Compile Include="Models\DB\CashFlowEntities.cs" />
     <Compile Include="Models\DB\Expense.cs" />
     <Compile Include="Models\DB\Income.cs" />
+    <Compile Include="Models\DB\Mappings\ExpenseMap.cs" />
+    <Compile Include="Models\DB\Mappings\IncomeMap.cs" />
+    <Compile Include="Models\DB\Mappings\StaffMap.cs" />
     <Compile Include="Models\DB\Staff.cs" />
     <Compile Include="Models\StaffsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

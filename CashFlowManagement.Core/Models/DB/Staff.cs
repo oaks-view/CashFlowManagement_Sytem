@@ -8,7 +8,6 @@ namespace CashFlowManagement.Core.Models.DB
 
     public class Staff
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Staff()
         {
             Expenses = new HashSet<Expense>();
@@ -35,10 +34,8 @@ namespace CashFlowManagement.Core.Models.DB
 
         public int StaffCategory { get; set; }
 
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Expense> Expenses { get; set; }
 
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Income> Incomes { get; set; }
     }
 }
