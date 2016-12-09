@@ -15,12 +15,28 @@ namespace CashFlowManagement.Tests.Core.repositories
     [TestClass]
     public class IncomeRepositoryTests
     {
-        private IIncomeRepository _repo;
-        private CashFlowEntities _context;
-        private DbContextTransaction _transaction;
-        private IStaffRepository _staffRepo;
-        Staff _managerDependency;
+        [TestCleanup]
+        public void BeforeEachTest()
+        {
+            CashFlowEntities db = new CashFlowEntities();
+            if (db.Incomes.Count() > 0)
+            {
+                foreach (Income inc in db.Incomes)
+                {
+                    db.Incomes.Remove(inc);
+                    db.SaveChanges();
+                }
+            }
 
+            if (db.Staffs.Count() > 0)
+            {
+                foreach(Staff stf in db.Staffs)
+                {
+                    db.Staffs.Remove(stf);
+                    db.SaveChanges();
+                }
+            }
+        }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Successfully_Create_New_Income_In_DataBase()
@@ -53,7 +69,7 @@ namespace CashFlowManagement.Tests.Core.repositories
                 Staff manager = context.Staffs.FirstOrDefault();
                 Income income = new Income("Wesite_Traffic", 3000, manager.Id);
                 repo.Create(income);
-                Income retrievedIncome = context.Incomes.SingleOrDefault();
+                Income retrievedIncome = context.Incomes.Where(x => x.Amount == 3000).Single();
                 Assert.AreEqual(sampleManager.Username, retrievedIncome.Staff.Username);
                 transaction.Rollback();
             }
@@ -75,6 +91,7 @@ namespace CashFlowManagement.Tests.Core.repositories
                 context.SaveChanges();
                 Income retrievedIncome = repo.GetIncome(manager.Incomes.SingleOrDefault().Id);
                 Assert.AreEqual(2300, retrievedIncome.Amount);
+                transaction.Rollback();
             }
         }
 
@@ -87,7 +104,7 @@ namespace CashFlowManagement.Tests.Core.repositories
             using (DbContextTransaction transaction = context.Database.BeginTransaction())
             {
                 staffRepo.Create(sampleManager);
-                Staff manager = context.Staffs.SingleOrDefault();
+                Staff manager = staffRepo.GetStaff(sampleManager.Username);
                 Income income = new Income("IMF_Grant", 45000, manager.Id);
                 string currentDate = DateTime.Now.ToString("yyyy-MM-dd-HH");
                 repo.Create(income);
@@ -101,32 +118,24 @@ namespace CashFlowManagement.Tests.Core.repositories
         [ExpectedException(typeof(NoMatchFound))]
         public void Throw_Exception_If_Income_Does_Not_Exist()
         {
-            var incomeInstance = _repo.GetIncome(000);
+            using (var context = new CashFlowEntities())
+            using (var repo = new IncomeRepository(context))
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                repo.GetIncome(00);
+            }
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_All_Saved_Income_From_Database()
         {
-            Income incomeData = new Income();
-            int prevIncomeCount = _context.Incomes.Count();
-            _repo.Create(incomeData);
-            _repo.Create(incomeData);
-            var allIncomes = _repo.GetAllIncome();
-            Assert.AreEqual(prevIncomeCount + 2, allIncomes.Count);
+            //some code here
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Update_Saved_Income()
         {
-            Income incomeData = new Income();
-            _repo.Create(incomeData);
-            
-            incomeData.Id = _context.Incomes
-                .Where(x => x.Description == "Subscription Revenue").Single().Id;
-            _repo.Update(incomeData);
-            Income updatedIncome = _context.Incomes
-                .Where(x => x.Description == "Website Advertisement").Single();
-            Assert.AreEqual(24000, updatedIncome.Amount);
+            //some code here
         }
     }
 }

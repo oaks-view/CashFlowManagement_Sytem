@@ -21,22 +21,21 @@ namespace CashFlowManagement.Tests.Core.repositories
         {
             using (CashFlowEntities context = new CashFlowEntities())
             using (var repo = new ExpenseRepository(context))
+            using (var staffRepo = new StaffRepository(context))
             using (DbContextTransaction transaction = context.Database.BeginTransaction())
             {
-                context.Staffs.Add(sampleEmployee);
-                context.SaveChanges();
-                Staff employee = context.Staffs.Where(x => x.Username == sampleEmployee.Username).SingleOrDefault();
+                staffRepo.Create(sampleEmployee);
+                Staff employee = staffRepo.GetStaff(sampleEmployee.Username);
                 Expense staffExpense = new Expense
                 (
                     "Unitest_Expenses",
-                    30000,
+                    32000,
                     employee.Id
                 );
-                employee.Expenses.Add(staffExpense);
-                context.SaveChanges();
-                Expense queryObj = context.Expenses.SingleOrDefault();
-                Assert.AreEqual("Unitest_Expenses", queryObj.Description);
-                Assert.AreEqual(employee.Id, queryObj.StaffId);
+                repo.Create(staffExpense);
+                Expense retrievedExpense = employee.Expenses.Where(x => x.Cost == 32000).Single();//context.Expenses.Where(x => x.Description == "Unitest_Expenses").First();
+                Assert.AreEqual("Unitest_Expenses", retrievedExpense.Description);
+                Assert.AreEqual(employee.Id, retrievedExpense.StaffId);
                 transaction.Rollback();
             }
         }
@@ -60,8 +59,9 @@ namespace CashFlowManagement.Tests.Core.repositories
 
                 employee.Expenses.Add(staffExpense);
                 context.SaveChanges();
-                Expense queryObj = repo.GetExpense(context.Expenses.Single().Id);
+                Expense retrievedExpense = repo.GetExpense(context.Expenses.SingleOrDefault().Id);
                 transaction.Rollback();
+                Assert.AreEqual(30000, retrievedExpense.Cost);
             }
         }
 
@@ -75,10 +75,11 @@ namespace CashFlowManagement.Tests.Core.repositories
                 context.Staffs.Add(sampleManager);
                 context.SaveChanges();
                 var staff = context.Staffs.Single();
+                int prevCount = context.Expenses.Count();
                 repo.Create(new Expense("E1", 2000, staff.Id));
                 repo.Create(new Expense("E2", 32000, staff.Id));
                 var allExpenses = repo.GetAllExpenses();
-                Assert.AreEqual(2, allExpenses.Count);
+                Assert.AreEqual(prevCount + 2, allExpenses.Count);
                 transaction.Rollback();
             }
         }
@@ -110,14 +111,16 @@ namespace CashFlowManagement.Tests.Core.repositories
             {
                 context.Staffs.Add(sampleManager);
                 context.SaveChanges();
-                var staff = context.Staffs.Single();
+                var staff = context.Staffs.SingleOrDefault();
+                int prevCount = context.Expenses.Count();
                 repo.Create(new Expense("E1", 2000, staff.Id));
                 repo.Create(new Expense("E2", 2000, staff.Id));
-                Assert.IsTrue(context.Expenses.Count() == 2);
+                int currentCount = prevCount + 2;
+                Assert.IsTrue(context.Expenses.Count() == currentCount);
 
                 Expense expense = context.Expenses.First();
                 repo.Delete(expense.Id);
-                Assert.AreEqual(1, context.Expenses.Count());
+                Assert.AreEqual(currentCount - 1, context.Expenses.Count());
                 transaction.Rollback();
             }
         }

@@ -68,6 +68,7 @@
     <Compile Include="Core\repositories\ExpenseRepositoryTests.cs" />
     <Compile Include="Core\TestData.cs" />
     <Compile Include="Core\StaffTests.cs" />
+    <Compile Include="Core\ExpenseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

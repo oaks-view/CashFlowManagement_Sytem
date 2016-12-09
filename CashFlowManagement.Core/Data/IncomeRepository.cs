@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Data.DB
 {
-    public class IncomeRepository:IIncomeRepository,IDisposable
+    public class IncomeRepository : IIncomeRepository, IDisposable
     {
         CashFlowEntities _db;
+        private readonly bool _externalContext;
         public IncomeRepository()
         {
             _db = new CashFlowEntities();
@@ -20,6 +21,7 @@ namespace CashFlowManagement.Core.Data.DB
         public IncomeRepository(CashFlowEntities context)
         {
             _db = context;
+            _externalContext = true;
         }
         public void Create(Income income)
         {
@@ -52,7 +54,7 @@ namespace CashFlowManagement.Core.Data.DB
 
         public void Dispose()
         {
-            if (_db == null)
+            if (_db == null || _externalContext)
             {
                 return;
             }
