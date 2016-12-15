@@ -12,22 +12,15 @@ namespace CashFlowManagement.Tests.Core
     {
         public static Staff sampleEmployee = new Staff
         {
-            Id = 23,
-            FirstName = "Clark",
-            LastName = "Kent",
-            Username = "kalel",
-            Password = "superman",
+            Id = "34482765-486c-45a3-805e-5857a1a04782",
+            Name = "Clark Kent",
             StaffCategory = (int)StaffsCategory.Employee
-
         };
 
         public static Staff sampleManager = new Staff
         {
-            Id = 12,
-            FirstName = "Bruce",
-            LastName = "Wayne",
-            Username = "batman",
-            Password = "gothamcity",
+            Id = "776682765-226u-09a3-805o-5857a1a04782",
+            Name = "Bruce Wayne",
             StaffCategory = (int)StaffsCategory.Manager
         };
     }

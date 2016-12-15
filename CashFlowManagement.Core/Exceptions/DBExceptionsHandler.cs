@@ -12,14 +12,6 @@ namespace CashFlowManagement.Core.Exceptions
     {
         public static void HandleException(Exception exception)
         {
-            DbUpdateConcurrencyException concurrencyEx = exception as DbUpdateConcurrencyException;
-            if (concurrencyEx != null)
-            {
-                // A custom exception of yours for concurrency issues
-                //throw new ConcurrencyException();
-                //moses remember to remove this from here;
-            }
-
             DbUpdateException dbUpdateEx = exception as DbUpdateException;
             if (dbUpdateEx != null)
             {
@@ -36,15 +28,9 @@ namespace CashFlowManagement.Core.Exceptions
                             case 547:   // Constraint check violation
                             case 2601:  // Duplicated key row error
                                         // Constraint violation exception
-                                throw new UsernameExistsException();   // A custom exception of yours for concurrency issues
-
-                            default:
-                                // A custom exception of yours for other DB issues
-                                throw new DatabaseAccessException(dbUpdateEx.Message, dbUpdateEx.InnerException);
+                                throw new StaffExistsException(); 
                         }
                     }
-
-                    throw new DatabaseAccessException(dbUpdateEx.Message, dbUpdateEx.InnerException);
                 }
             }
         }

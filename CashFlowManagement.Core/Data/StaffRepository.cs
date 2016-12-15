@@ -19,7 +19,7 @@ namespace CashFlowManagement.Core.Data
             _db = new CashFlowEntities();
         }
 
-        public StaffRepository(CashFlowEntities context)
+        public StaffRepository(CashFlowEntities context) 
         {
             _db = context;
             _externalContext = true;
@@ -28,38 +28,12 @@ namespace CashFlowManagement.Core.Data
         public void Create(Staff staff)
         {
             _db.Staffs.Add(staff);
-            try
-            {
-                _db.SaveChanges();
-            }
-
-            catch (Exception e)
-            {
-                DBExceptionsHandler.HandleException(e);
-            }
+            _db.SaveChanges();
         }
 
-        public void Update(Staff companyStaff)
-        {
-            Staff dbStaff = GetStaff(companyStaff.Id);
-            dbStaff.FirstName = companyStaff.FirstName;
-            dbStaff.LastName = companyStaff.LastName;
-
-        }
-        public Staff GetStaff(int Id)//moses would probably remove if never used
+        public Staff GetStaff(string Id)
         {
             return _db.Staffs.Find(Id);
-        }
-        public Staff GetStaff(string username)
-        {
-            Staff staff = _db.Staffs
-                 .Where(x => x.Username == username)
-                 .Select(x => x).SingleOrDefault();
-            if (staff == null)
-            {
-                throw new NoMatchFound();
-            }
-            return staff;
         }
 
         public List<Staff> GetAllStaffs()

@@ -328,7 +328,15 @@ namespace CashFlowManagement.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            //var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser()
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                //StaffCategory = model.StaffCategory
+            };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -336,6 +344,9 @@ namespace CashFlowManagement.Web.Controllers
             {
                 return GetErrorResult(result);
             }
+            //moses this is  wher we grab user and id to  create our employee profile password ad create our
+            //Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.id }));
+            //call custom method from service that creates our employee and saves it
 
             return Ok();
         }

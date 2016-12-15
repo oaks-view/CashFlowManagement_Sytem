@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CashFlowManagement.Core.Models.DB;
+using CashFlowManagement.Core.Models;
 using EmployeeManagement.Tests;
 
 namespace CashFlowManagement.Tests.Core

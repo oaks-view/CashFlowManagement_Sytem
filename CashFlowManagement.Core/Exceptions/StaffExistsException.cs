@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CashFlowManagement.Core.Exceptions
 {
-    public class UsernameExistsException:Exception
+    public class StaffExistsException:Exception
     {
-        public UsernameExistsException()
-            :base("Staff with this username already Exists.")
+        public StaffExistsException()
+            :base("Staff Duplicate Key, Or Other Errors Occured.")
         {
         }
     }

@@ -14,11 +14,8 @@ namespace CashFlowManagement.Tests.Core
         {
             Staff staff = new Staff
             {
-                Id = 23,
-                FirstName = "Moses",
-                LastName = "Fejiro",
-                Username = "mosesfejiro",
-                Password = "password",
+                Id = "anyidfortest",
+                Name = "Moses Fejiro",
                 StaffCategory = (int)StaffsCategory.Employee
             };
             Assert.IsNotNull(staff);

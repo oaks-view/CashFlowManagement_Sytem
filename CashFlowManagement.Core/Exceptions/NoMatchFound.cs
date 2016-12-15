@@ -9,7 +9,7 @@ namespace CashFlowManagement.Core.Exceptions
     public class NoMatchFound:Exception
     {
         public NoMatchFound()
-            :base("No Staff with this username was found")
+            :base("No Staff record was found")
         {
         }
 

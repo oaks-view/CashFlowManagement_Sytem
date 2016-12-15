@@ -35,6 +35,18 @@ namespace CashFlowManagement.Web.Models
     public class RegisterBindingModel
     {
         [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        //[Required]
+        //[Display(Name = "Staff Category")]
+        //public string StaffCategory { get; set; }
+        //allprevious are my code changes
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

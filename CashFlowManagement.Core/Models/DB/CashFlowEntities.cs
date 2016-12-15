@@ -18,9 +18,9 @@ namespace CashFlowManagement.Core.Models.DB
         {
         }
 
-        public virtual DbSet<Expense> Expenses { get; set; }
-        public virtual DbSet<Income> Incomes { get; set; }
-        public virtual DbSet<Staff> Staffs { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+        public DbSet<Income> Incomes { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

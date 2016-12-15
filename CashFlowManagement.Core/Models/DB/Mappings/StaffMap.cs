@@ -12,9 +12,7 @@ namespace CashFlowManagement.Core.Models.DB.Mappings
         public StaffMap()
         {
             HasKey(e => e.Id);
-            Property(e => e.Username).IsRequired();
-            Property(e => e.FirstName).IsRequired();
-            Property(e => e.LastName).IsRequired();
+            Property(e => e.Name).IsRequired();
             Property(e => e.StaffCategory).IsRequired();
 
             HasMany(e => e.Incomes)

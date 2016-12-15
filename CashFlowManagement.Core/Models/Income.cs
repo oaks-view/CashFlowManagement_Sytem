@@ -1,4 +1,4 @@
-namespace CashFlowManagement.Core.Models.DB
+namespace CashFlowManagement.Core.Models
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace CashFlowManagement.Core.Models.DB
     public class Income
     {
         public Income() { }
-        public Income(string description, int amount, int staffId)
+        public Income(string description, int amount, string staffId)
         {
             Description = description;
             Amount = amount;
@@ -24,7 +24,7 @@ namespace CashFlowManagement.Core.Models.DB
 
         public int Amount { get; set; }
 
-        public int StaffId { get; set; }
+        public string StaffId { get; set; }
 
         public DateTime DateCreated { get; set; }
 

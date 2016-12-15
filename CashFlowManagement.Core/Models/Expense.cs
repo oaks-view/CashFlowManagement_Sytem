@@ -1,4 +1,4 @@
-namespace CashFlowManagement.Core.Models.DB
+namespace CashFlowManagement.Core.Models
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace CashFlowManagement.Core.Models.DB
     public class Expense
     {
         public Expense() { }
-        public Expense(string description, int cost, int staffId)
+        public Expense(string description, int cost, string staffId)
         {
             Description = description;
             Cost = cost;
@@ -25,7 +25,7 @@ namespace CashFlowManagement.Core.Models.DB
 
         public int Cost { get; set; }
 
-        public int StaffId { get; set; }
+        public string StaffId { get; set; }
 
         public DateTime DateCreated { get; set; }
 

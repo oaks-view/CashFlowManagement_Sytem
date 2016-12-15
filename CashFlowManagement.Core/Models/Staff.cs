@@ -1,4 +1,4 @@
-namespace CashFlowManagement.Core.Models.DB
+namespace CashFlowManagement.Core.Models
 {
     using System;
     using System.Collections.Generic;
@@ -14,23 +14,11 @@ namespace CashFlowManagement.Core.Models.DB
             Incomes = new HashSet<Income>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
-        [StringLength(30)]
-        public string Username { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Password { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string LastName { get; set; }
+        [StringLength(120)]
+        public string Name { get; set; }
 
         public int StaffCategory { get; set; }
 

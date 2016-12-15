@@ -15,33 +15,38 @@ namespace CashFlowManagement.Tests.Core.repositories
     [TestClass]
     public class StaffRepositoryTests
     {
-        [TestMethod, TestCategory(Constants.IntegrationTest)]
-        public void Can_Successfully_Create_Staff_In_Database()
+        private CashFlowEntities _context;
+        private DbContextTransaction _transaction;
+
+        [TestInitialize]
+        public void BeforeEach()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new StaffRepository(context))
-            using (DbContextTransaction transaction = context.Database.BeginTransaction())
-            {
-                repo.Create(sampleEmployee);
-                Staff employee = context.Staffs.Where(s => s.Username == sampleEmployee.Username).Single();
-                Assert.IsNotNull(employee);
-                transaction.Rollback();
-            }
+            _context = new CashFlowEntities();
+            _transaction = _context.Database.BeginTransaction();
+        }
+
+        [TestCleanup]
+        public void AfterEach()
+        {
+            var expenses = _context.Expenses.ToList();
+
+            _context.Expenses.RemoveRange(expenses);
+            _context.SaveChanges();
         }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
-        [ExpectedException(typeof(UsernameExistsException))]
-        public void Throws_Exception_When_Staff_With_Username_Already_Exists_In_Database()
+        public void Can_Successfully_Create_Staff_In_Database()
         {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new StaffRepository(context))
-            using(DbContextTransaction transaction = context.Database.BeginTransaction())
+            using (var repo = new StaffRepository(_context))
             {
                 repo.Create(sampleEmployee);
-                repo.Create(sampleEmployee);
-                transaction.Rollback();
+                Staff employee = _context.Staffs.Single();
+                Assert.IsNotNull(employee);
+                _transaction.Rollback();
             }
-        } 
+        }
+        
+
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_Staff_From_DataBase_Using_Id()
@@ -51,27 +56,14 @@ namespace CashFlowManagement.Tests.Core.repositories
             using (DbContextTransaction transaction = context.Database.BeginTransaction())
             {
                 repo.Create(TestData.sampleManager);
-                Staff manager = context.Staffs.Where(x => x.Username == TestData.sampleManager.Username).Single();
+                Staff manager = context.Staffs.Single();
                 Staff managerId = repo.GetStaff(manager.Id);
                 Assert.IsNotNull(manager);
-                Assert.AreEqual("Bruce", manager.FirstName);
+                Assert.AreEqual("Bruce", manager.Name);
                 transaction.Rollback();
             }
         }
 
-        [TestMethod, TestCategory(Constants.IntegrationTest)]
-        public void Can_Retrieve_Staff_From_DataBase_Using_Username()
-        {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new StaffRepository(context))
-            using (DbContextTransaction transaction = context.Database.BeginTransaction())
-            {
-                repo.Create(TestData.sampleManager);
-                Staff manager = repo.GetStaff(TestData.sampleManager.Username);
-                Assert.AreEqual(sampleManager.Username, manager.Username);
-                transaction.Rollback();
-            }
-        }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Should_Be_Able_To_Retrieve_All_Staffs_In_Database()
@@ -88,16 +80,5 @@ namespace CashFlowManagement.Tests.Core.repositories
             }
         }
 
-        [TestMethod, TestCategory(Constants.IntegrationTest)]
-        [ExpectedException(typeof(NoMatchFound))]
-        public void Should_Throw_Exception_When_Username_Is_Not_Found()
-        {
-            using (CashFlowEntities context = new CashFlowEntities())
-            using (var repo = new StaffRepository(context))
-            {
-                var fakeUsername = "mightyFakeJane";
-                var staff = repo.GetStaff(fakeUsername);
-            }
-        }
     }
 }

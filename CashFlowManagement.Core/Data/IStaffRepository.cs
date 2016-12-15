@@ -1,4 +1,4 @@
-﻿using CashFlowManagement.Core.Models.DB;
+﻿using CashFlowManagement.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace CashFlowManagement.Core.Data
     public interface IStaffRepository
     {
         void Create(Staff staff);
-        Staff GetStaff(string username);
+        Staff GetStaff(string id);
         List<Staff> GetAllStaffs();
     }
 }

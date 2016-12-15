@@ -57,19 +57,24 @@
     <Compile Include="Data\IncomeRepository.cs" />
     <Compile Include="Data\IStaffRepository.cs" />
     <Compile Include="Data\StaffRepository.cs" />
-    <Compile Include="Exceptions\DatabaseAccessException.cs" />
     <Compile Include="Exceptions\DBExceptionsHandler.cs" />
-    <Compile Include="Exceptions\UsernameExistsException.cs" />
+    <Compile Include="Exceptions\StaffExistsException.cs" />
     <Compile Include="Exceptions\NoMatchFound.cs" />
     <Compile Include="Models\DB\CashFlowEntities.cs" />
-    <Compile Include="Models\DB\Expense.cs" />
-    <Compile Include="Models\DB\Income.cs" />
+    <Compile Include="Models\Expense.cs" />
+    <Compile Include="Models\Income.cs" />
     <Compile Include="Models\DB\Mappings\ExpenseMap.cs" />
     <Compile Include="Models\DB\Mappings\IncomeMap.cs" />
     <Compile Include="Models\DB\Mappings\StaffMap.cs" />
-    <Compile Include="Models\DB\Staff.cs" />
+    <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\StaffsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ExpenseService.cs" />
+    <Compile Include="Services\IExpenseService.cs" />
+    <Compile Include="Services\IIncomeService.cs" />
+    <Compile Include="Services\IncomeService.cs" />
+    <Compile Include="Services\StaffService.cs" />
+    <Compile Include="Services\IStaffService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
