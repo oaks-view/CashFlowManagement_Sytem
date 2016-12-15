@@ -4,29 +4,22 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;//import need to grab userId
-using System.Security.Claims;//import was said to be needed
+using Microsoft.AspNet.Identity;
 using CashFlowManagement.Core.Models;
 using CashFlowManagement.Core.Services;
-using CashFlowManagement.Core.Data;//moses unity injector takew cARE OF THIS
+
 
 namespace CashFlowManagement.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Manager")]
 
     public class StaffController : ApiController
     {
-        private StaffService _service;
-        public StaffController()
+        private IStaffService _service;
+        public StaffController(IStaffService staffService)
         {
-            _service = new StaffService(new StaffRepository());
+            _service = staffService;
         }
-        public string Get()
-        {
-            string userId = User.Identity.GetUserId();
-            return userId;
-        }
-
 
         public Staff Get(string userId)
         {

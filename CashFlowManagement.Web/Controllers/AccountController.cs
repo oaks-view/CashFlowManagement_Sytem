@@ -328,25 +328,36 @@ namespace CashFlowManagement.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-            var user = new ApplicationUser()
+            IdentityResult result;
+            using (var context = new ApplicationDbContext())
             {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                //StaffCategory = model.StaffCategory
-            };
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                await roleManager.CreateAsync(new IdentityRole() { Name = "Manager" });
+                await roleManager.CreateAsync(new IdentityRole(){ Name ="Employee"});
+
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                var user = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    //StaffCategory = model.StaffCategory
+                };
+                result = await UserManager.CreateAsync(user, model.Password);
+                await userManager.AddToRoleAsync(user.Id, "Manager");
+
+            }
+
 
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
             }
-            //moses this is  wher we grab user and id to  create our employee profile password ad create our
-            //Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.id }));
-            //call custom method from service that creates our employee and saves it
 
             return Ok();
         }
