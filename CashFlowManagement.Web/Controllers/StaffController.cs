@@ -7,7 +7,7 @@ using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using CashFlowManagement.Core.Models;
 using CashFlowManagement.Core.Services;
-
+using CashFlowManagement.Core.Data;
 
 namespace CashFlowManagement.Web.Controllers
 {
@@ -16,6 +16,11 @@ namespace CashFlowManagement.Web.Controllers
     public class StaffController : ApiController
     {
         private IStaffService _service;
+
+        public StaffController()
+        {
+            _service = new StaffService(new StaffRepository());
+        }
         public StaffController(IStaffService staffService)
         {
             _service = staffService;
