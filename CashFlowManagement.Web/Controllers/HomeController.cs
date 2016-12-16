@@ -12,7 +12,7 @@ namespace CashFlowManagement.Web.Controllers
         {
             ViewBag.Title = "Home Page";
 
-            return View("Login");
+            return View();
         }
     }
 }

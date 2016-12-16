@@ -1,17 +1,13 @@
 ﻿$(document).ready(function () {
-    $("#linkClose").click(function () {
+    $("#topLoginBtn").on("click",function () {
+        $("#mainWindow").load("/templates/Login.html");
+    });
+    $("#linkClose").on("click",function () {
         $("#divError").hide('fade')
     });
-    $("#registerPage").load("templates/registration.html");
 
-    $("#topLoginBtn").click(function () {
-        $("#registerPage").addClass("hidden");
-        $("#loginForm").removeClass("hidden");
-        //$("#registerPage").addClass("hidden");
-    });
-
-    $("#btnRegister").click(function () {
-        alert($("#staff1").value);
+    $("#btnRegister").on("click",function () {
+        alert($("REGISTERING OUR USER"));
         alert($("input[name=optradio]:checked").value)
         //$("#successModal").modal('show');
         $.ajax({

@@ -2,14 +2,12 @@
     $("#linkClose").click(function () {
         $("#divError").hide('fade');
     });
-    $("#topRegisterBtn").click(function () {
-        $("#registerPage").removeClass("hidden");
-        $("#loginForm").addClass("hidden");
+    $("#topRegisterBtn").on("click",function () {
+        $("#mainWindow").load("/templates/Registration.html");
+        })
     });
-    $("#managerHomePage").load("/templates/managerHome.html");
-    $("#registerPage").load("templates/registration.html");
 
-    $("#btnLogin").click(function () {
+    $("#btnLogin").on("click",function () {
         $.ajax({
             url: "/token",
             method: "POST",
@@ -21,9 +19,8 @@
             },
             success: function (response) {
                 sessionStorage.setItem("accessToken", response.access_token);
-                $("#managerHomePage").removeClass("hidden")
+                $("#mainWindow").load("/templates/managerHome.html");
                 
-                $("#loginForm").addClass("hidden");
                 registerStaff();
             },
             error: function (jqXHR) {
@@ -31,5 +28,23 @@
                 $("#divError").show("fade");
             }
         });
+
+        function registerStaff() {
+            //finds out if staff record exists for this user 
+            //and create one if not.
+            $.ajax({
+                url: "api/Staff",
+                method: "Post",
+                contentType: "application/json",
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        }
     });
-});

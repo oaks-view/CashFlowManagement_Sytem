@@ -349,8 +349,15 @@ namespace CashFlowManagement.Web.Controllers
                     //StaffCategory = model.StaffCategory
                 };
                 result = await UserManager.CreateAsync(user, model.Password);
-                await userManager.AddToRoleAsync(user.Id, "Manager");
+                if (model.StaffCategory == "Manager")
+                {
+                    await userManager.AddToRoleAsync(user.Id, "Manager");
+                }
 
+                else
+                {
+                    await userManager.AddToRoleAsync(user.Id, "Employee");
+                }
             }
 
 
