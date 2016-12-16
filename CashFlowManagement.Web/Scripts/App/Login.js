@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $("#linkClose").click(function () {
+    $("#linkClose").on("click",function () {
         $("#divError").hide('fade');
     });
     $("#topRegisterBtn").on("click",function () {
