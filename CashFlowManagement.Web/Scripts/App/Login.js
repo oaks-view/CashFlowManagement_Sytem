@@ -14,8 +14,10 @@
             },
             success: function (response) {
                 sessionStorage.setItem("accessToken", response.access_token);
+                $("#managerHomePage").removeClass("hidden");
                 $("#loginForm").addClass("hidden");
-                $("#staffData").removeClass("hidden");
+                $("#managerHomePage").removeClass("hidden");
+                //$("#staffData").removeClass("hidden");
                 registerStaff();
             },
             error: function (jqXHR) {
