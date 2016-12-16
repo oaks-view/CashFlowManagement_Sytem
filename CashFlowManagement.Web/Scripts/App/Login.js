@@ -1,7 +1,14 @@
 ﻿$(document).ready(function () {
     $("#linkClose").click(function () {
-        $("#divError").hide('fade')
+        $("#divError").hide('fade');
     });
+    $("#topRegisterBtn").click(function () {
+        $("#registerPage").removeClass("hidden");
+        $("#loginForm").addClass("hidden");
+    });
+    $("#managerHomePage").load("/templates/managerHome.html");
+    $("#registerPage").load("templates/registration.html");
+
     $("#btnLogin").click(function () {
         $.ajax({
             url: "/token",
@@ -14,10 +21,9 @@
             },
             success: function (response) {
                 sessionStorage.setItem("accessToken", response.access_token);
-                $("#managerHomePage").removeClass("hidden");
+                $("#managerHomePage").removeClass("hidden")
+                
                 $("#loginForm").addClass("hidden");
-                $("#managerHomePage").removeClass("hidden");
-                //$("#staffData").removeClass("hidden");
                 registerStaff();
             },
             error: function (jqXHR) {

@@ -2,7 +2,17 @@
     $("#linkClose").click(function () {
         $("#divError").hide('fade')
     });
+    $("#registerPage").load("templates/registration.html");
+
+    $("#topLoginBtn").click(function () {
+        $("#registerPage").addClass("hidden");
+        $("#loginForm").removeClass("hidden");
+        //$("#registerPage").addClass("hidden");
+    });
+
     $("#btnRegister").click(function () {
+        alert($("#staff1").value);
+        alert($("input[name=optradio]:checked").value)
         //$("#successModal").modal('show');
         $.ajax({
             url: "api/account/register",
