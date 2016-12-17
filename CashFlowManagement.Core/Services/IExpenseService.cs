@@ -12,5 +12,8 @@ namespace CashFlowManagement.Core.Services
         void CreateExpense(Expense expense);
         Expense GetExpense(int expense);
         List<Expense> GetAllExpense();
+        Dictionary<String, int> GetMonthlyExpenses();
+        Dictionary<string, int> GetYearlyExpenses();
+        void Update(Expense expense);
     }
 }

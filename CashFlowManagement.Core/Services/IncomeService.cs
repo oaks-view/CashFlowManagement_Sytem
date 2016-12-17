@@ -47,5 +47,10 @@ namespace CashFlowManagement.Core.Services
                 .ToDictionary(i => i.Key.ToString(), i => i.Sum( x => x.Amount));
             return yearlyIncome;
         }
+
+        public void Update(Income income)
+        {
+            _repository.Update(income);
+        }
     }
 }

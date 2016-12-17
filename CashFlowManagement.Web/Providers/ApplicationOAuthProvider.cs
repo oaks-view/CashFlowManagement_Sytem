@@ -56,6 +56,8 @@ namespace CashFlowManagement.Web.Providers
             {
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
+            //add custom info i.e userId to token
+            context.AdditionalResponseParameters.Add("userId", context.Identity.GetUserId());
 
             return Task.FromResult<object>(null);
         }

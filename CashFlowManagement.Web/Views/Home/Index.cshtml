@@ -14,21 +14,27 @@
     <title></title>
     <meta charset="utf-8" />
     <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+
+
+
+
 </head>
 <body style="padding-top:20px">
-    <script src="../Scripts/jquery-1.10.2.js"></script>
-    <script src="../Scripts/bootstrap.min.js"></script>
     <div class="container" id="mainWindow">
     </div>
 
     <script>
         $(document).ready(function () {
             $("#mainWindow").load("/templates/Login.html");
-            });
+            $.getScript("/Scripts/App/Login.js");
+        });
+
 
     </script>
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
 
 
 </body>

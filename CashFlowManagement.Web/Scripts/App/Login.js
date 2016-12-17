@@ -2,8 +2,10 @@
     $("#linkClose").on("click",function () {
         $("#divError").hide('fade');
     });
+
     $("#topRegisterBtn").on("click",function () {
         $("#mainWindow").load("/templates/Registration.html");
+        $.getScript("/Scripts/App/Registration.js");
         })
     });
 
@@ -19,9 +21,14 @@
             },
             success: function (response) {
                 sessionStorage.setItem("accessToken", response.access_token);
-                $("#mainWindow").load("/templates/managerHome.html");
-                
+                sessionStorage.setItem('expires', response['.expires']);
+                sessionStorage.setItem('username', response.userName);
+                sessionStorage.setItem('userid', response.userId);
+                console.log(response);
                 registerStaff();
+                GetStaffDetails();
+                loadManagerPage();                
+
             },
             error: function (jqXHR) {
                 $("#divErrorText").text(jqXHR.responseText);
@@ -29,9 +36,13 @@
             }
         });
 
+        function loadManagerPage() {
+            $("#mainWindow").load("/templates/managerHome.html");
+            $.getScript("/Scripts/bootstrap.min.js");
+            $.getScript("/Scripts/App/ManagerSession.js");
+        };
+
         function registerStaff() {
-            //finds out if staff record exists for this user 
-            //and create one if not.
             $.ajax({
                 url: "api/Staff",
                 method: "Post",
@@ -46,5 +57,24 @@
                     console.log(jqXHR.responseText);
                 }
             });
+        }
+
+        function GetStaffDetails() {
+            var userid = sessionStorage.getItem("userid");
+            $.ajax({
+                url: "api/Staff/"+userid,
+                method: "Get",
+                headers: {
+                    "Authorization": "Bearer" + sessionStorage.getItem("accessToken")
+                },
+                success: function(response){
+                    var details = JSON.parse(response);
+                    sessionStorage.setItem("currentStaff", details);
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.reponse);
+                    console.log(jqXHR.responseText);
+                }
+            })
         }
     });

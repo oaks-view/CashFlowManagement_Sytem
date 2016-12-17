@@ -38,7 +38,7 @@ namespace CashFlowManagement.Core.Services
         public Staff GetStaff(string id)
         {
             Staff staff = _staffRepository.GetStaff(id);
-            return staff;//moses exception should be throwwn when staf is not found
+            return staff;
         }
 
         public List<Staff> GetAllStaffs()

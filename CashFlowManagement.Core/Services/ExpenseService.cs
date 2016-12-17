@@ -46,5 +46,10 @@ namespace CashFlowManagement.Core.Services
                 .ToDictionary(e => e.Key.ToString(), e => e.Sum(x => x.Cost));
             return yearlyExpenses;
         }
+
+        public void Update(Expense expense)
+        {
+            _repository.Update(expense.Description, expense.Cost, expense.Id);
+        }
     }
 }

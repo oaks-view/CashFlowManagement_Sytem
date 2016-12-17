@@ -12,5 +12,8 @@ namespace CashFlowManagement.Core.Services
         void CreateIncome(Income income);
         Income GetIncome(int id);
         List<Income> GetAllIncome();
+        Dictionary<string, int> GetMonthlyIncome();
+        Dictionary<string, int> GetYearlyIncome();
+        void Update(Income income);
     }
 }
