@@ -60,21 +60,24 @@
         }
 
         function GetStaffDetails() {
+            var defer = jQuery.Deferred()
             var userid = sessionStorage.getItem("userid");
             $.ajax({
                 url: "api/Staff",
-                method: "Get",
+                method: "GET",
                 data: { userId: userid },
-                contentType: "application/json",
                 headers: {
                     "Authorization": "Bearer" + sessionStorage.getItem("accessToken")
                 },
                 success: function(response){
                     sessionStorage.setItem("currentStaff", response);
+                    defer.resolve(true);
                 },
                 error: function (jqXHR) {
                     console.log(jqXHR.reponse);
+                    defer.resolve(true);
                 }
             })
+            return defer.promise();
         }
     });

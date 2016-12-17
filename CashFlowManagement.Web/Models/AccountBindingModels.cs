@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 
 namespace CashFlowManagement.Web.Models
 {
-    // Models used as parameters to AccountController actions.
 
     public class AddExternalLoginBindingModel
     {
@@ -45,7 +44,6 @@ namespace CashFlowManagement.Web.Models
         [Required]
         [Display(Name = "Staff Category")]
         public string StaffCategory { get; set; }
-        //allprevious are my code changes
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
