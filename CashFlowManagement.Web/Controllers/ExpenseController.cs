@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace CashFlowManagement.Web.Controllers
 {
+    [Authorize]
     public class ExpenseController : ApiController
     {
         // GET: api/Expense

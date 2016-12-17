@@ -62,18 +62,18 @@
         function GetStaffDetails() {
             var userid = sessionStorage.getItem("userid");
             $.ajax({
-                url: "api/Staff/"+userid,
+                url: "api/Staff",
                 method: "Get",
+                data: { userId: userid },
+                contentType: "application/json",
                 headers: {
                     "Authorization": "Bearer" + sessionStorage.getItem("accessToken")
                 },
                 success: function(response){
-                    var details = JSON.parse(response);
-                    sessionStorage.setItem("currentStaff", details);
+                    sessionStorage.setItem("currentStaff", response);
                 },
                 error: function (jqXHR) {
                     console.log(jqXHR.reponse);
-                    console.log(jqXHR.responseText);
                 }
             })
         }

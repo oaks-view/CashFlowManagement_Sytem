@@ -12,7 +12,7 @@ using CashFlowManagement.Core.Data;
 namespace CashFlowManagement.Web.Controllers
 {
     //[Authorize(Roles = "Manager,Employee")]
-    [Authorize]
+    //[Authorize]
     public class StaffController : ApiController
     {
         private IStaffService _service;
