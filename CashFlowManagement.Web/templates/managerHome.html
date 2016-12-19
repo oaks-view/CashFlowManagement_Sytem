@@ -19,13 +19,12 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expenses<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Daily Expense</a></li>
                         <li><a href="#">Weekly Expense</a></li>
                         <li><a href="#">Monthly Expense</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Annual Expense</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Add Expense</a></li>
+                        <li id="addExpenseBtn"><a href="">Add Expense</a></li>
                     </ul>
                 </li>
             </ul>
@@ -55,6 +54,10 @@
 
 <!--ADD INCOME MODAL-->
 <div class="container" id="addIncomeModalContainer"></div>
+
+<!--ADD EXPENSE MODAL-->
+<div class="container" id="addExpenseModalContainer"></div>
 <script>
-    $("#addIncomeModalContainer").load("/templates/AddIncomeModal.html")
+    $("#addIncomeModalContainer").load("/templates/AddIncomeModal.html");
+    $("#addExpenseModalContainer").load("/templates/AddExpenseModal.html");
 </script>

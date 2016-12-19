@@ -24,12 +24,12 @@ namespace CashFlowManagement.Web.Controllers
             return _incomeService.GetIncome(incomeId);
         }
 
-        public void Post([FromBody]dynamic values)
+        public void Post([FromBody]Income values)
         {
             Income income = new Income(
-                values.Description.Value,
-                values.Amount.Value,
-                values.StaffId.Value
+                values.Description,
+                values.Amount,
+                values.StaffId
                 );
 
             _incomeService.CreateIncome(income);

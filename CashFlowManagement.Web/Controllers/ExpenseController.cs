@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CashFlowManagement.Core.Models;
+using CashFlowManagement.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +12,12 @@ namespace CashFlowManagement.Web.Controllers
     [Authorize]
     public class ExpenseController : ApiController
     {
+        private IExpenseService _expenseService;
+        public ExpenseController(IExpenseService expenseService)
+        {
+            _expenseService = expenseService;
+        }
+
         // GET: api/Expense
         public IEnumerable<string> Get()
         {
@@ -22,13 +30,20 @@ namespace CashFlowManagement.Web.Controllers
             return "value";
         }
 
+
         // POST: api/Expense
-        public void Post([FromBody]string value)
+        public void Post([FromBody]Expense values)
         {
+            Expense expense = new Expense(
+                values.Description,
+                values.Cost,
+                values.StaffId);
+
+            _expenseService.CreateExpense(expense);
         }
 
         // PUT: api/Expense/5
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody]string value)
         {
         }
 
