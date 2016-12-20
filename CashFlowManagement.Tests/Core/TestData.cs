@@ -23,5 +23,43 @@ namespace CashFlowManagement.Tests.Core
             Name = "Bruce Wayne",
             StaffCategory = (int)StaffsCategory.Manager
         };
+
+        public static List<Income> _sampleIncomes = new List<Income>
+        {
+            new Income
+            {
+                Description = "Income1",
+                Amount = 22300,
+                Id = 221,
+                StaffId = sampleManager.Id,
+                Staff = sampleManager,
+                DateCreated = DateTime.Now
+            },
+            new Income
+            {
+                Description = "Income2",
+                Amount = 45000,
+                Id = 912,
+                StaffId = sampleManager.Id,
+                Staff = sampleManager,
+                DateCreated = DateTime.Now
+            },
+            new Income
+            {
+                Description = "Income3",
+                Amount = 13000,
+                Id = 81,
+                StaffId = sampleManager.Id,
+                Staff = sampleManager
+            },
+            new Income
+            {
+                Description = "Income4",
+                Amount = 5000,
+                Id = 372,
+                StaffId = sampleManager.Id,
+                Staff = sampleManager
+            }
+        };
     }
 }

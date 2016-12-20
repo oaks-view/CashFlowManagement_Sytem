@@ -1,7 +1,6 @@
 ﻿
 
 (function () {
-
     alert("ManagerSESSION LOADED")
     $("#logout-btn").on("click", managerLogout);
     $("#add-income-btn").on("click", function () { $("#addIncomeModal").modal("show") });
@@ -17,7 +16,7 @@
         sessionStorage.removeItem("userid");
         sessionStorage.removeItem("username");
         sessionStorage.removeItem("expires");
-        loadLoginPage();
+        displayLogin(true);
         return false;
     }
 
@@ -32,8 +31,15 @@
     }
 
     function loadLoginPage() {
-        $("#mainWindow").load("/templates/Login.html");
-        $.getScript("/Scripts/App/Login.js");
+        function displayLogin(status) {
+            if (status) {
+                $('#login-layout').addClass("hidden").removeClass("hidden")
+                $('#manager-layout').removeClass("hidden").addClass("hidden")
+            } else {
+                $('#login-layout').removeClass("hidden").addClass("hidden")
+                $('#manager-layout').addClass("hidden").removeClass("hidden")
+            }
+        }
     }
 
     function getAllSavedIncome() {
@@ -51,8 +57,10 @@
             },
             error: function (jqXHR) {
                 console.log(jqXHR.response);
+                defer.resolve(true);
             }
         });
+        return defer.promise();
     }
 
     function saveNewIncome() {
@@ -97,13 +105,17 @@
             },
             data: JSON.stringify(expense),
             success: function () {
-                alert("added expenss successfully");
-                console.log("Added expense successfully");
+                $("#addExpenseModal").modal("hide");
+                clearExpenseModalPopupFields();
             },
             error: function (jqXHR) {
                 console.log(jqXHR.response);
             }
         });
     }
-
+    $('#menu1').children().first().on('click', function (e) {
+        e.preventDefault();
+        console.log("Holla");
+    })
+    $('#menu1 ul li:nth-child(2)')
 })()

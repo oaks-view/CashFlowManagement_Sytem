@@ -16,20 +16,111 @@
 
     <div class="container" id="mainWindow">
     </div>
+    <div id="login-layout" class="hidden"></div>
+    <div id="manager-layout" class="hidden"></div>
+    <div id="registration-layout" class="hidden"></div>
+
     <script src="~/Scripts/jquery-1.10.2.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 
-    <!--
-    <script src="~/Scripts/App/Login.js" type="text/javascript"></script>
-    <script src="~/Scripts/App/ManagerSession.js" type="text/javascript"></script>
-    <script src="~/Scripts/App/Registration.js" type="text/javascript"></script>
-        -->
+
 
     <script>
-        $("#mainWindow").load("/templates/Login.html");
-        $.getScript("/Scripts/App/Login.js");
-    </script>
+        function LoginUser() {
+            $("#login-btn").click(function () {
+                $.ajax({
+                    url: "/token",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: {
+                        Username: $("#txtEmailLogin").val(),
+                        Password: $("#txtPasswordLogin").val(),
+                        grant_type: "password"
+                    },
+                    success: function (response) {
+                        sessionStorage.setItem("accessToken", response.access_token);
+                        sessionStorage.setItem('expires', response['.expires']);
+                        sessionStorage.setItem('username', response.userName);
+                        sessionStorage.setItem('userid', response.userId);
+                        console.log(response);
+                        displayLogin(false)
+                        registerStaff();
 
+                    },
+                    error: function (jqXHR) {
+                        $("#divErrorText").text(jqXHR.responseText);
+                        $("#divError").show("fade");
+                    }
+                });
+            })
+        }
+        function managerLogout() {
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("userid");
+            sessionStorage.removeItem("username");
+            sessionStorage.removeItem("expires");
+            displayLogin(true);
+        }
+        
+        //LOAD ALL TEMPLATES AND RESPECTIVE SCRIPTS
+        $("#login-layout").load("/templates/Login.html", function () {
+            LoginUser();
+            $("#register-btn-top").on("click", displayRegistrationPage);
+        });
+        $('#manager-layout').load('/templates/ManagerPage.html', function () {
+            $.getScript('/Scripts/App/ManagerSession.js')
+        })
+        $("#registration-layout").load("/templates/Registration.html", function () {
+            $.getScript("/Scripts/App/Registration.js");
+        })
+
+    </script>
+    <script>
+        function displayLogin(status) {
+            if (status) {
+                $('#login-layout').addClass("hidden").removeClass("hidden")
+                $('#manager-layout').removeClass("hidden").addClass("hidden")
+                $("#registration-layout").removeClass("hidden").addClass("hidden");
+                clearLoginFields();
+            } else {
+                $('#login-layout').removeClass("hidden").addClass("hidden")
+                $('#manager-layout').addClass("hidden").removeClass("hidden")
+            }
+        }
+        var accessToken = sessionStorage.getItem("accessToken");
+        if (accessToken) {
+            displayLogin(false)
+        } else {
+            displayLogin(true)
+        }
+        function registerStaff() {
+            $.ajax({
+                url: "api/Staff",
+                method: "Post",
+                contentType: "application/json",
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        }
+
+        function displayRegistrationPage() {
+            $('#login-layout').removeClass("hidden").addClass("hidden");
+            $("#registration-layout").addClass("hidden").removeClass("hidden");
+        }
+
+        function clearLoginFields() {
+            $("#txtEmailLogin").val("");
+            $("#txtPasswordLogin").val("");
+        }
+        
+    </script>
 </body>
 </html>
 

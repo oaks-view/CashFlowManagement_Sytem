@@ -5,6 +5,7 @@
         $.getScript("/Scripts/App/ManagerSession.js");
     };
 
+
     function registerStaff() {
         $.ajax({
             url: "api/Staff",

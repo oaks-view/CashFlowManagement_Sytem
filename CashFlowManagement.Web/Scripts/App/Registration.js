@@ -1,11 +1,10 @@
-﻿$(document).ready(function () {
+﻿$(function () {
     var staffCategory = "Employee";
     $("#staff1").on("click", function () { staffCategory = "Employee";});
     $("#staff2").on("click", function () { staffCategory = "Manager"; });
 
-    function loadLogInPage() {
-        $("#mainWindow").load("/templates/Login.html");
-        $.getScript("/Scripts/App/Login.js");
+    function displayLogInPage() {
+        displayLogin(true);
     };
 
     function clearRegistrationFields() {
@@ -17,7 +16,7 @@
     };
 
     $("#topLoginBtn").on("click", function () {
-        loadLogInPage();
+        displayLogInPage();
     });
 
     $("#linkClose").on("click",function () {
@@ -46,4 +45,4 @@
             }
         });
     });
-});
+})();
