@@ -10,24 +10,30 @@ namespace CashFlowManagement.Core.Services
 {
     public class ExpenseService: IExpenseService
     {
-        private IExpenseRepository _repository;
+        private IExpenseRepository _expenseRepository;
         public ExpenseService(IExpenseRepository repo)
         {
-            _repository = repo;
+            _expenseRepository = repo;
         }
-        public void CreateExpense(Expense expense)
+        public void SaveExpense(Expense expense)
         {
-            _repository.Create(expense);
+            Expense dbExpense = GetExpense(expense.Id);
+            if (dbExpense == null)
+            {
+                _expenseRepository.Create(expense);
+            }
+            else
+                _expenseRepository.Update(expense);
         }
 
         public Expense GetExpense(int id)
         {
-            return _repository.GetExpense(id);
+            return _expenseRepository.GetExpense(id);
         }
 
         public List<Expense> GetAllExpense()
         {
-            var allExpenses = _repository.GetAllExpenses();
+            var allExpenses = _expenseRepository.GetAllExpenses();
             return allExpenses.ToList();
         }
 
@@ -47,9 +53,9 @@ namespace CashFlowManagement.Core.Services
             return yearlyExpenses;
         }
 
-        public void Update(Expense expense)
+        public void DeleteExpense(int expenseId)
         {
-            _repository.Update(expense.Description, expense.Cost, expense.Id);
+            _expenseRepository.Delete(expenseId);
         }
     }
 }

@@ -34,5 +34,29 @@ namespace CashFlowManagement.Web.Controllers
 
             _incomeService.CreateIncome(income);
         }
+
+        public void Put([FromBody]Income values)
+        {
+            _incomeService.CreateIncome(values);
+        }
+
+        [HttpGet]
+        [Route("MonthlyIncome")]
+        public Dictionary<string, int> GetMonthlyIncome()
+        {
+            return _incomeService.GetMonthlyIncome();
+        }
+
+        [HttpGet]
+        [Route("YearlyIncome")]
+        public Dictionary<string, int> GetYearlyIncome()
+        {
+            return _incomeService.GetYearlyIncome();
+        }
+
+        public void Delete(int incomeId)
+        {
+            _incomeService.DeleteIncome(incomeId);
+        }
     }
 }

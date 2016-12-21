@@ -18,20 +18,17 @@ namespace CashFlowManagement.Web.Controllers
             _expenseService = expenseService;
         }
 
-        // GET: api/Expense
-        public IEnumerable<string> Get()
+        public List<Expense> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _expenseService.GetAllExpense();
         }
 
-        // GET: api/Expense/5
-        public string Get(int id)
+        public Expense Get(int id)
         {
-            return "value";
+            return _expenseService.GetExpense(id);
         }
 
 
-        // POST: api/Expense
         public void Post([FromBody]Expense values)
         {
             Expense expense = new Expense(
@@ -39,17 +36,33 @@ namespace CashFlowManagement.Web.Controllers
                 values.Cost,
                 values.StaffId);
 
-            _expenseService.CreateExpense(expense);
+            _expenseService.SaveExpense(expense);
         }
 
         // PUT: api/Expense/5
-        public void Put([FromBody]string value)
+        public void Put([FromBody]Expense values)
         {
+            _expenseService.SaveExpense(values);
+        }
+
+        [HttpGet]
+        [Route("MonthlyExpense")]
+        public Dictionary<string,int> GetMonthlyExpenses()
+        {
+            return _expenseService.GetMonthlyExpenses();
+        }
+
+        [HttpGet]
+        [Route("YearlyExpense")]
+        public Dictionary<string,int> GetYearlyExpenses()
+        {
+            return _expenseService.GetYearlyExpenses();
         }
 
         // DELETE: api/Expense/5
-        public void Delete(int id)
+        public void Delete(int expenseId)
         {
+            _expenseService.DeleteExpense(expenseId);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace CashFlowManagement.Core.Data
         void Create(Expense expenseData);
         Expense GetExpense(int Id);
         List<Expense> GetAllExpenses();
-        void Update(string description, int cost, int expenseId);
+        void Update(Expense expense);
+        void Delete(int Id);
     }
 }

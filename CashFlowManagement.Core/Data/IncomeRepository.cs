@@ -31,12 +31,7 @@ namespace CashFlowManagement.Core.Data.DB
 
         public Income GetIncome(int id)
         {
-            var income = _db.Incomes.Find(id);
-            if (income == null)
-            {
-                throw new NoMatchFound("No Record for Income with this Id was found.");
-            }
-            return income;
+            return _db.Incomes.Find(id);
         }
 
         public List<Income> GetAllIncome()
@@ -49,6 +44,13 @@ namespace CashFlowManagement.Core.Data.DB
             Income income = GetIncome(incomeData.Id);
             income.Description = incomeData.Description;
             income.Amount = incomeData.Amount;
+            _db.SaveChanges();
+        }
+
+        public void Delete(int incomeId)
+        {
+            Income income = GetIncome(incomeId);
+            _db.Incomes.Remove(income);
             _db.SaveChanges();
         }
 

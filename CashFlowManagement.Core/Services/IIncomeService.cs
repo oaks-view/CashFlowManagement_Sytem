@@ -14,6 +14,6 @@ namespace CashFlowManagement.Core.Services
         List<Income> GetAllIncome();
         Dictionary<string, int> GetMonthlyIncome();
         Dictionary<string, int> GetYearlyIncome();
-        void Update(Income income);
+        void DeleteIncome(int incomeId);
     }
 }

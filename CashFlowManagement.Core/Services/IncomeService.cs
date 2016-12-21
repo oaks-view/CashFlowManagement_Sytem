@@ -10,25 +10,31 @@ namespace CashFlowManagement.Core.Services
 {
     public class IncomeService: IIncomeService
     {
-        private IIncomeRepository _repository; 
+        private IIncomeRepository _incomeRepository; 
         public IncomeService(IIncomeRepository repo)
         {
-            _repository = repo;
+            _incomeRepository = repo;
         }
         public void CreateIncome(Income income)
         {
-            _repository.Create(income);
+            Income dbIncome = GetIncome(income.Id);
+            if (dbIncome == null)
+            {
+                _incomeRepository.Create(income);
+            }
+            else
+                _incomeRepository.Update(income);
         }
 
         public Income GetIncome(int id)
         {
-            var income = _repository.GetIncome(id);
+            var income = _incomeRepository.GetIncome(id);
             return income;
         }
 
         public List<Income> GetAllIncome()
         {
-            var allIncome = _repository.GetAllIncome();
+            var allIncome = _incomeRepository.GetAllIncome();
             return allIncome;
         }
 
@@ -48,9 +54,9 @@ namespace CashFlowManagement.Core.Services
             return yearlyIncome;
         }
 
-        public void Update(Income income)
+        public void DeleteIncome(int incomeId)
         {
-            _repository.Update(income);
+            _incomeRepository.Delete(incomeId);
         }
     }
 }

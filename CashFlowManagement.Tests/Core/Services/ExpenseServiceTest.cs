@@ -8,6 +8,7 @@ using static CashFlowManagement.Tests.Core.TestData;
 using System.Linq;
 using CashFlowManagement.Core.Services;
 using EmployeeManagement.Tests;
+using static CashFlowManagement.Tests.Core.TestData;
 
 namespace CashFlowManagement.Tests.Core.Services
 {
@@ -15,43 +16,6 @@ namespace CashFlowManagement.Tests.Core.Services
     public class ExpenseServiceTest
     {
         private Mock<IExpenseRepository> _mockExpenseRepo;
-        private List<Expense> _sampleExpenses = new List<Expense>
-        {
-            new Expense
-            {
-                Description = "Expense1",
-                Cost = 23000,
-                Id = 23,
-                StaffId = sampleEmployee.Id,
-                Staff = sampleEmployee,
-                DateCreated = DateTime.Now,
-            },
-            new Expense
-            {
-                Description = "Expense2",
-                Cost = 8750,
-                Id = 122,
-                StaffId = sampleEmployee.Id,
-                Staff = sampleEmployee,
-                DateCreated = DateTime.Now,
-            },
-            new Expense
-            {
-                Description = "Expense3",
-                Cost = 8000,
-                Id = 663,
-                StaffId = sampleEmployee.Id,
-                Staff = sampleEmployee
-            },
-            new Expense
-            {
-                Description = "Expense4",
-                Cost = 6450,
-                Id = 822,
-                StaffId = sampleEmployee.Id,
-                Staff = sampleEmployee,
-            }
-        };
 
         [TestInitialize]
         public void BeforeTests()
@@ -62,7 +26,17 @@ namespace CashFlowManagement.Tests.Core.Services
                 .Returns((int arg) => {
                     return _sampleExpenses.FirstOrDefault(x => x.Id == arg);
                 });
+
+            _mockExpenseRepo
+                .Setup(x => x.Create(It.IsAny<Expense>())).Verifiable();
+
+            _mockExpenseRepo
+                .Setup(x => x.Update(It.IsAny<Expense>())).Verifiable();
+
+            _mockExpenseRepo
+                .Setup(x => x.Delete(It.IsAny<int>())).Verifiable();
         }
+
         [TestMethod, TestCategory(Constants.UnitTest)]
         public void Can_Successfully_Instantiate_ExpenseService()
         {
@@ -115,6 +89,45 @@ namespace CashFlowManagement.Tests.Core.Services
             Assert.IsTrue(allKeys.Contains(currentYear));
             var sampleSum = _sampleExpenses[0].Cost + _sampleExpenses[1].Cost;
             Assert.AreEqual(sampleSum, yearlyExpenses[currentYear]);
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Update_Saved_Expense()
+        {
+            Expense savedExpense = _sampleExpenses[0];
+            var service = new ExpenseService(_mockExpenseRepo.Object);
+            service.SaveExpense(savedExpense);
+            _mockExpenseRepo.Verify(x => 
+            x.Update(It.Is<Expense>(
+                inc => inc.Description == savedExpense.Description
+                && inc.Cost == savedExpense.Cost
+                && inc.StaffId == savedExpense.StaffId
+                && inc.Staff == savedExpense.Staff
+                && inc.Id == savedExpense.Id)
+                ));
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Save_New_Expense()
+        {
+            var service = new ExpenseService(_mockExpenseRepo.Object);
+            Expense expense = new Expense("AnyExpense", 12000, sampleManager.Id);
+            service.SaveExpense(expense);
+            _mockExpenseRepo.Verify(x => x.Create(It.Is<Expense>(exp =>
+                exp.Description == "AnyExpense"
+                && exp.Cost == 12000)
+                ));
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Delete_Saved_Expense()
+        {
+            var service = new ExpenseService(_mockExpenseRepo.Object);
+            var savedExpense = _sampleExpenses[0];
+            service.DeleteExpense(savedExpense.Id);
+            _mockExpenseRepo.Verify(x => x.Delete(It.Is<int>(input =>
+            input == savedExpense.Id
+            )));
         }
     }
 }

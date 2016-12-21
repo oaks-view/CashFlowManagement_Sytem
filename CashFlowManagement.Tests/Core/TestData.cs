@@ -61,5 +61,43 @@ namespace CashFlowManagement.Tests.Core
                 Staff = sampleManager
             }
         };
+
+        public static List<Expense> _sampleExpenses = new List<Expense>
+        {
+            new Expense
+            {
+                Description = "Expense1",
+                Cost = 23000,
+                Id = 23,
+                StaffId = sampleEmployee.Id,
+                Staff = sampleEmployee,
+                DateCreated = DateTime.Now,
+            },
+            new Expense
+            {
+                Description = "Expense2",
+                Cost = 8750,
+                Id = 122,
+                StaffId = sampleEmployee.Id,
+                Staff = sampleEmployee,
+                DateCreated = DateTime.Now,
+            },
+            new Expense
+            {
+                Description = "Expense3",
+                Cost = 8000,
+                Id = 663,
+                StaffId = sampleEmployee.Id,
+                Staff = sampleEmployee
+            },
+            new Expense
+            {
+                Description = "Expense4",
+                Cost = 6450,
+                Id = 822,
+                StaffId = sampleEmployee.Id,
+                Staff = sampleEmployee,
+            }
+        };
     }
 }

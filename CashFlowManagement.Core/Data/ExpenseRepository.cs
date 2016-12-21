@@ -45,11 +45,11 @@ namespace CashFlowManagement.Core.Data
             return _db.Expenses.ToList();
         }
 
-        public void Update(string description, int cost, int expenseId)
+        public void Update(Expense expense)
         {
-            Expense expense = GetExpense(expenseId);
-            expense.Description = description;
-            expense.Cost = cost;
+            Expense dbExpense = GetExpense(expense.Id);
+            dbExpense.Description = expense.Description;
+            dbExpense.Cost = expense.Cost;
             _db.SaveChanges();
         }
 

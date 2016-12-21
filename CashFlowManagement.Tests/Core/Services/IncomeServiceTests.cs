@@ -15,43 +15,6 @@ namespace CashFlowManagement.Tests.Core.Services
     public class IncomeServiceTests
     {
         private Mock<IIncomeRepository> _mockIncomeRepository;
-        private List<Income> _sampleIncomes = new List<Income>
-        {
-            new Income
-            {
-                Description = "Income1",
-                Amount = 22300,
-                Id = 221,
-                StaffId = sampleManager.Id,
-                Staff = sampleManager,
-                DateCreated = DateTime.Now
-            },
-            new Income
-            {
-                Description = "Income2",
-                Amount = 45000,
-                Id = 912,
-                StaffId = sampleManager.Id,
-                Staff = sampleManager,
-                DateCreated = DateTime.Now
-            },
-            new Income
-            {
-                Description = "Income3",
-                Amount = 13000,
-                Id = 81,
-                StaffId = sampleManager.Id,
-                Staff = sampleManager
-            },
-            new Income
-            {
-                Description = "Income4",
-                Amount = 5000,
-                Id = 372,
-                StaffId = sampleManager.Id,
-                Staff = sampleManager
-            }
-        };
 
         [TestInitialize]
         public void BeforeTests()
@@ -62,6 +25,10 @@ namespace CashFlowManagement.Tests.Core.Services
                 .Returns((int arg) => {
                     return _sampleIncomes.FirstOrDefault(x => x.Id == arg);
                 });
+
+            _mockIncomeRepository.Setup(x => x.Create(It.IsAny<Income>())).Verifiable();
+            _mockIncomeRepository.Setup(x => x.Update(It.IsAny<Income>())).Verifiable();
+            _mockIncomeRepository.Setup(x => x.Delete(It.IsAny<int>())).Verifiable();
 
         }
 
@@ -120,6 +87,47 @@ namespace CashFlowManagement.Tests.Core.Services
             var sampleSum = _sampleIncomes[0].Amount + _sampleIncomes[1].Amount;
             Assert.IsTrue(allKeys.Contains(currentYear));
             Assert.AreEqual(sampleSum, yearlyIncome[currentYear]);
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Update_Saved_Income()
+        {
+            Income newIncome = _sampleIncomes[0];
+            var service = new IncomeService(_mockIncomeRepository.Object);
+            service.CreateIncome(newIncome);
+            _mockIncomeRepository.Verify(x => x.Update(It.Is<Income>(
+                inc => inc.Description == newIncome.Description
+                && inc.Amount == newIncome.Amount
+                &&inc.StaffId == newIncome.StaffId
+                &&inc.Staff == newIncome.Staff
+                && inc.Id == newIncome.Id))
+                );
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Save_New_Income()
+        {
+            Income newIncome = new Income(
+                "AnyIncome",
+                23000,
+                "any-stffs-id-12ert"
+                );
+            var service = new IncomeService(_mockIncomeRepository.Object);
+            service.CreateIncome(newIncome);
+            _mockIncomeRepository.Verify(x => x.Create(It.Is<Income>(inc=>
+            inc.Description == "AnyIncome"
+            )));
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Delete_Saved_Income()
+        {
+            var service = new IncomeService(_mockIncomeRepository.Object);
+            var savedIncome = _sampleIncomes[0];
+            service.DeleteIncome(savedIncome.Id);
+            _mockIncomeRepository.Verify(x => x.Delete(It.Is<int>(input =>
+            input == savedIncome.Id)
+            ));
         }
     }
 }

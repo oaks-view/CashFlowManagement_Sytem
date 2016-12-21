@@ -13,5 +13,6 @@ namespace CashFlowManagement.Core.Data.DB
         Income GetIncome(int id);
         List<Income> GetAllIncome();
         void Update(Income incomeData);
+        void Delete(int incomeId);
     }
 }

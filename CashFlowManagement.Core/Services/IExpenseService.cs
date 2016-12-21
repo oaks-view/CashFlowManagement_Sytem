@@ -9,11 +9,11 @@ namespace CashFlowManagement.Core.Services
 {
     public interface IExpenseService
     {
-        void CreateExpense(Expense expense);
+        void SaveExpense(Expense expense);
         Expense GetExpense(int expense);
         List<Expense> GetAllExpense();
         Dictionary<String, int> GetMonthlyExpenses();
         Dictionary<string, int> GetYearlyExpenses();
-        void Update(Expense expense);
+        void DeleteExpense(int expenseId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Elmah.Contrib.WebApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -19,6 +20,7 @@ namespace CashFlowManagement.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             UnityConfig.RegisterComponents();
+            //GlobalConfiguration.Configuration.Filters.Add(new ElmahHandleErrorApiAttribute());
         }
     }
 }
