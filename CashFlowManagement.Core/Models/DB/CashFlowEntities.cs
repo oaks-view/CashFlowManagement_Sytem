@@ -16,6 +16,8 @@ namespace CashFlowManagement.Core.Models.DB
         public CashFlowEntities()
             : base("name=CashFlowDb")
         {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         public DbSet<Expense> Expenses { get; set; }

@@ -8,6 +8,7 @@ using CashFlowManagement.Core.Models;
 using static CashFlowManagement.Tests.Core.TestData;
 using EmployeeManagement.Tests;
 using System.Collections.Generic;
+using System.Web.Http.Results;
 
 namespace CashFlowManagement.Tests.web
 {
@@ -57,7 +58,7 @@ namespace CashFlowManagement.Tests.web
             var controller = new ExpenseController(_mockExpenseService.Object);
             Expense savedExpense = _sampleExpenses[0];
             var apiCallResult = controller.Get();
-            Assert.IsTrue(apiCallResult.Count == _sampleExpenses.Count);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<List<Expense>>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -66,7 +67,8 @@ namespace CashFlowManagement.Tests.web
             Expense newExpense = _sampleExpenses[0];
             var controller = new ExpenseController(_mockExpenseService.Object);
             var apiCallResult = controller.Get(newExpense.Id);
-            Assert.AreEqual(newExpense.Description, apiCallResult.Description);
+            Assert.IsNotNull(apiCallResult);
+            Assert.IsNotInstanceOfType(apiCallResult, typeof(OkResult));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -100,7 +102,7 @@ namespace CashFlowManagement.Tests.web
         {
             var controller = new ExpenseController(_mockExpenseService.Object);
             var apiCallResult = controller.GetMonthlyExpenses();
-            Assert.AreEqual(_monthlyExpensesVal, apiCallResult);
+            Assert.IsInstanceOfType(apiCallResult,typeof(OkNegotiatedContentResult<Dictionary<string, int>>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -108,7 +110,7 @@ namespace CashFlowManagement.Tests.web
         {
             var controller = new ExpenseController(_mockExpenseService.Object);
             var apiCallResult = controller.GetYearlyExpenses();
-            Assert.AreEqual(_yearlyExpensesVal.Keys, apiCallResult.Keys);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<Dictionary<string, int>>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -120,6 +122,7 @@ namespace CashFlowManagement.Tests.web
             _mockExpenseService.Verify(x => x.DeleteExpense(It.Is<int>(input =>
             input == savedExpense.Id
             )));
+
         }
     }
 }

@@ -14,9 +14,32 @@ namespace CashFlowManagement.Tests.Core.repositories
 {
     [TestClass]
     public class IncomeRepositoryTests
-    {/*
+    {
         private CashFlowEntities _context;
         private DbContextTransaction _transaction;
+
+        [ClassInitialize]
+        public static void BeforeAllTests(TestContext testContext)
+        {
+            var ctx = new CashFlowEntities();
+            ctx.Database
+                .ExecuteSqlCommand(@"insert into AspNetUsers(Id,FirstName, LastName,Email, Username) 
+                Values({0},'Clark','Kent','clark@superman.com','clark@superman.com')", sampleEmployee.Id);
+            ctx.Database
+                .ExecuteSqlCommand(@"insert into AspNetUsers(Id,FirstName, LastName,Email, Username) 
+                Values({0},'Bruce','Wayne','bruce@batman.com','bruce@batman.com')", sampleManager.Id);
+        }
+
+        [ClassCleanup]
+        public static void AfterAllTests()
+        {
+            var ctx = new CashFlowEntities();
+            ctx.Database.ExecuteSqlCommand(@"delete from AspNetUsers
+            where Id = {0}", sampleEmployee.Id);
+
+            ctx.Database.ExecuteSqlCommand(@"delete from AspNetUsers
+            where Id = {0}", sampleManager.Id);
+        }
 
         [TestInitialize]
         public void BeforeEach()
@@ -48,29 +71,14 @@ namespace CashFlowManagement.Tests.Core.repositories
             {
                 context.Staffs.Add(sampleManager);
                 context.SaveChanges();
-                Staff manager = staffRepo.GetStaff(sampleManager.Username);
-                Income income = new Income("Web_Advertisment", 3000, manager.Id);
+                Income income = new Income("Web_Advertisment", 3000, sampleManager.Id);
                 repo.Create(income);
-                var dbIncome = manager.Incomes.SingleOrDefault();
+                var dbIncome = sampleManager.Incomes.SingleOrDefault();
                 Assert.AreEqual(3000, dbIncome.Amount);
                 transaction.Rollback();
             }
         }
 
-        [TestMethod, TestCategory(Constants.IntegrationTest)]
-        public void Can_Get_Staff_From_Saved_Income()
-        {
-            using (var repo = new IncomeRepository(_context))
-            {
-                _context.Staffs.Add(sampleManager);
-                _context.SaveChanges();
-                Staff manager = _context.Staffs.Single();
-                Income income = new Income("Wesite_Traffic", 3000, manager.Id);
-                repo.Create(income);
-                Income retrievedIncome = _context.Incomes.Where(x => x.Amount == 3000).Single();
-                Assert.AreEqual(sampleManager.Username, retrievedIncome.Staff.Username);
-            }
-        }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_Saved_Income_From_Database()
@@ -103,15 +111,6 @@ namespace CashFlowManagement.Tests.Core.repositories
             }
         }
 
-        [TestMethod, TestCategory(Constants.IntegrationTest)]
-        [ExpectedException(typeof(NoMatchFound))]
-        public void Throw_Exception_If_Income_Does_Not_Exist()
-        {
-            using (var repo = new IncomeRepository(_context))
-            {
-                repo.GetIncome(00);
-            }
-        }
 
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_All_Saved_Income_From_Database()
@@ -143,5 +142,5 @@ namespace CashFlowManagement.Tests.Core.repositories
                 Assert.AreEqual(".Net_Conference_Revenues", manager.Incomes.Single().Description);
             }
         }
-    */}
+    }
 }

@@ -1,5 +1,8 @@
-﻿  
+﻿ <script src="../Scripts/bootstrap-toggle.min.js"></script>
+<link href="../Content/App/bootstrap-toggle.min.css" rel="stylesheet" />
+
  <!--MANAGERS PAGE-->
+<div class="container">
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -15,15 +18,52 @@
 
         <button id="add-income-btn" data-toggle="modal" data-target="#addIncomeModal" class="btn btn-success">Add Income</button>
         <input id="get-saved-incomes-btn" class="btn btn-primary" type="button" value="See Saved Incomes" />
-        <input id="add-expense-btn" data-toggle="modal" data-target="#addExpenseModal" class="btn btn-danger" type="button" value="Add new Expense"/>
-        <input id="get-saved-expenses-btn" class="btn btn-primary" type="button" value="See Saved Expenses" />
-        <input id="logout-btn" class="btn btn-default" type="button" value="logout" />
-        <a href="#" class="dropdown-toggle" id="drop4" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Dropdown <span class="caret"></span> </a>
-        <ul class="dropdown-menu" id="menu1" aria-labelledby="drop4"> 
-            <li><a href="#">Action</a></li> <li><a href="#">Another action</a></li> <li><a href="#">Something else here</a></li> <li role="separator" class="divider"></li> <li><a href="#">Separated link</a></li> </ul>
-     </div>
+
+        <ul class="nav navbar-nav ">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Income Options <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" id="manager-monthly-income">Monthly Income</a></li>
+                    <li><a href="#" id="manager-yearly-income">Annual Income</a></li>
+                    <li><a href="#" id="manager-weekly-income">Weekly Income</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a id="manager-saved-incomes" href="#">All your Saved Income</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav ">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Expenses Options <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#"  id="manager-monthly-expenses">Monthly Expenses</a></li>
+                    <li><a href="#" id="manager-yearly-expenses">Annual Expenses</a></li>
+                    <li><a href="#" id="manager-weekly-expenses">Weeks Expenses</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a id="manager-saved-incomes" href="#">All your Saved Income</a></li>
+                </ul>
+            </li>
+            </ul>
+
+            <input id="add-expense-btn" data-toggle="modal" data-target="#addExpenseModal" class="btn btn-danger" type="button" value="Add new Expense" />
+            <input id="get-saved-expenses-btn" class="btn btn-primary" type="button" value="See Saved Expenses" />
+            <input id="logout-btn" class="btn btn-default" type="button" value="logout" />
+
+</div>
 </nav>
+</div>
 <!--MANAGERS NAVBAR ENDS-->
+
+<!--table for display follows here-->
+<div class="container" >
+<input type="checkbox" checked data-toggle="toggle" data-on="Incomes" data-off="Expenses" data-onstyle="success" data-offstyle="danger">
+    
+    <div class="well well-lg" id="table-container">
+        <h2>Income and Expenses Panel</h2>
+    </div><!--expenses element ends here-->
+
+</div>
+
 
 <!--ADD INCOME MODAL-->
 <div id="addIncomeModal" class="modal fade" tabindex="-1" role="dialog">
@@ -44,7 +84,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="saveNewIncomeButton" type="button" class="btn btn-primary pull-left">Save</button>
+                <button id="saveNewIncomeButton" type="button" class="btn btn-primary pull-left" style="vertical-align:middle">Save</button>
                 <button id="cancel" type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -76,7 +116,3 @@
         </div>
     </div>
 </div>
-<script>
-    //$("#addIncomeModalContainer").load("/templates/AddIncomeModal.html");
-    //$("#addExpenseModalContainer").load("/templates/AddExpenseModal.html");
-</script>

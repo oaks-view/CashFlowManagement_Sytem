@@ -9,6 +9,7 @@ using CashFlowManagement.Core.Models;
 using System.Web.Http;
 using EmployeeManagement.Tests;
 using System.Collections.Generic;
+using System.Web.Http.Results;
 
 namespace CashFlowManagement.Tests.web
 {
@@ -56,7 +57,8 @@ namespace CashFlowManagement.Tests.web
             var incomeController = new IncomeController(_incomeServiceMock.Object);
             var incomeId = TestData._sampleIncomes[0].Id;
             var apiCallResult = incomeController.Get(incomeId);
-            Assert.IsInstanceOfType(apiCallResult, typeof(Income));
+            Assert.IsNotNull(apiCallResult);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<Income>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -64,7 +66,7 @@ namespace CashFlowManagement.Tests.web
         {
             var incomeController = new IncomeController(_incomeServiceMock.Object);
             var apiCallResult = incomeController.Get();
-            Assert.AreEqual(TestData._sampleIncomes.Count, apiCallResult.Count);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<List<Income>>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -99,7 +101,7 @@ namespace CashFlowManagement.Tests.web
         {
             var incomeController = new IncomeController(_incomeServiceMock.Object);
             var apiCallResult = incomeController.GetMonthlyIncome();
-            Assert.AreEqual(_monthlyIncomeVal.Keys, apiCallResult.Keys);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<Dictionary<string,int>>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]
@@ -107,7 +109,7 @@ namespace CashFlowManagement.Tests.web
         {
             var incomeController = new IncomeController(_incomeServiceMock.Object);
             var apiCallResult = incomeController.GetYearlyIncome();
-            Assert.AreEqual(_yearlyIncomeVal.Keys, apiCallResult.Keys);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<Dictionary<string, int>>));
         }
 
         [TestMethod, TestCategory(Constants.UnitTest)]

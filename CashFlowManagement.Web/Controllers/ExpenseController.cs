@@ -18,14 +18,24 @@ namespace CashFlowManagement.Web.Controllers
             _expenseService = expenseService;
         }
 
-        public List<Expense> Get()
+        public IHttpActionResult Get()
         {
-            return _expenseService.GetAllExpense();
+            var expenses = _expenseService.GetAllExpense();
+            if (expenses == null)
+            {
+                return NotFound();
+            }
+            return Ok(expenses);
         }
 
-        public Expense Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return _expenseService.GetExpense(id);
+            var expense = _expenseService.GetExpense(id);
+            if (expense == null)
+            {
+                return NotFound();
+            }
+            return Ok(expense);
         }
 
 
@@ -39,27 +49,31 @@ namespace CashFlowManagement.Web.Controllers
             _expenseService.SaveExpense(expense);
         }
 
-        // PUT: api/Expense/5
         public void Put([FromBody]Expense values)
         {
             _expenseService.SaveExpense(values);
         }
 
-        [HttpGet]
-        [Route("MonthlyExpense")]
-        public Dictionary<string,int> GetMonthlyExpenses()
+        public IHttpActionResult GetMonthlyExpenses()
         {
-            return _expenseService.GetMonthlyExpenses();
+            var monthlyExpenses =_expenseService.GetMonthlyExpenses();
+            if (monthlyExpenses == null)
+            {
+                return NotFound();
+            }
+            return Ok(monthlyExpenses);
         }
 
-        [HttpGet]
-        [Route("YearlyExpense")]
-        public Dictionary<string,int> GetYearlyExpenses()
+        public IHttpActionResult GetYearlyExpenses()
         {
-            return _expenseService.GetYearlyExpenses();
+            var yearlyExpenses = _expenseService.GetYearlyExpenses();
+            if (yearlyExpenses == null)
+            {
+                return NotFound();
+            }
+            return Ok(yearlyExpenses);
         }
 
-        // DELETE: api/Expense/5
         public void Delete(int expenseId)
         {
             _expenseService.DeleteExpense(expenseId);

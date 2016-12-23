@@ -18,6 +18,29 @@ namespace CashFlowManagement.Tests.Core.repositories
         private CashFlowEntities _context;
         private DbContextTransaction _transaction;
 
+        [ClassInitialize]
+        public static void BeforeAllTests(TestContext testContext)
+        {
+            var ctx = new CashFlowEntities();
+            ctx.Database
+                .ExecuteSqlCommand(@"insert into AspNetUsers(Id,FirstName, LastName,Email, Username) 
+                Values({0},'Clark','Kent','clark@superman.com','clark@superman.com')", sampleEmployee.Id);
+            ctx.Database
+                .ExecuteSqlCommand(@"insert into AspNetUsers(Id,FirstName, LastName,Email, Username) 
+                Values({0},'Bruce','Wayne','bruce@batman.com','bruce@batman.com')", sampleManager.Id);
+        }
+
+        [ClassCleanup]
+        public static void AfterAllTests()
+        { 
+            var ctx = new CashFlowEntities();
+            ctx.Database.ExecuteSqlCommand(@"delete from AspNetUsers
+            where Id = {0}", sampleEmployee.Id);
+
+            ctx.Database.ExecuteSqlCommand(@"delete from AspNetUsers
+            where Id = {0}", sampleManager.Id);
+        }
+
         [TestInitialize]
         public void BeforeEach()
         {
@@ -59,7 +82,7 @@ namespace CashFlowManagement.Tests.Core.repositories
                 Staff manager = context.Staffs.Single();
                 Staff managerId = repo.GetStaff(manager.Id);
                 Assert.IsNotNull(manager);
-                Assert.AreEqual("Bruce", manager.Name);
+                Assert.AreEqual("Bruce Wayne", manager.Name);
                 transaction.Rollback();
             }
         }
@@ -72,13 +95,11 @@ namespace CashFlowManagement.Tests.Core.repositories
             using (var repo = new StaffRepository(context))
             using (DbContextTransaction transaction = context.Database.BeginTransaction())
             {
-                var prevCount = context.Staffs.Count();
                 repo.Create(sampleEmployee);
                 repo.Create(sampleManager);
-                Assert.AreEqual(prevCount + 2, context.Staffs.Count());
+                Assert.AreEqual(2, context.Staffs.Count());
                 transaction.Rollback();
             }
         }
-
     }
 }

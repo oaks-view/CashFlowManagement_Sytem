@@ -14,10 +14,32 @@ namespace CashFlowManagement.Tests.Core.repositories
 {
     [TestClass]
     public class ExpenseRepositoryTests
-        //Tests are commented out because to save staff to daatabase we have a UserId dependency
-    {/*
+    {
         private CashFlowEntities _context;
         private DbContextTransaction _transaction;
+
+        [ClassInitialize]
+        public static void BeforeAllTests(TestContext testContext)
+        {
+            var ctx = new CashFlowEntities();
+            ctx.Database
+                .ExecuteSqlCommand(@"insert into AspNetUsers(Id,FirstName, LastName,Email, Username) 
+                Values({0},'Clark','Kent','clark@superman.com','clark@superman.com')", sampleEmployee.Id);
+            ctx.Database
+                .ExecuteSqlCommand(@"insert into AspNetUsers(Id,FirstName, LastName,Email, Username) 
+                Values({0},'Bruce','Wayne','bruce@batman.com','bruce@batman.com')", sampleManager.Id);
+        }
+
+        [ClassCleanup]
+        public static void AfterAllTests()
+        {
+            var ctx = new CashFlowEntities();
+            ctx.Database.ExecuteSqlCommand(@"delete from AspNetUsers
+            where Id = {0}", sampleEmployee.Id);
+
+            ctx.Database.ExecuteSqlCommand(@"delete from AspNetUsers
+            where Id = {0}", sampleManager.Id);
+        }
 
         [TestInitialize]
         public void BeforeEach()
@@ -46,19 +68,15 @@ namespace CashFlowManagement.Tests.Core.repositories
             {
                 _context.Staffs.Add(sampleEmployee);
                 _context.SaveChanges();
-                //Staff employee = _context.Staffs.Where(x => x.Username == sampleEmployee.Username).SingleOrDefault();
-                Staff employee = _context.Staffs.Single();
                 Expense staffExpense = new Expense
                 (
                     "Unitest_Expenses",
                     32000,
-                    employee.Id
+                    sampleEmployee.Id
                 );
-                employee.Expenses.Add(staffExpense);
-                _context.SaveChanges();
-                Expense queryObj = _context.Expenses.Single();
-                Assert.AreEqual("Unitest_Expenses", queryObj.Description);
-                Assert.AreEqual(employee.Id, queryObj.StaffId);
+                repo.Create(staffExpense);
+                Expense dbExpense = _context.Expenses.Single();
+                Assert.AreEqual("Unitest_Expenses", dbExpense.Description);
             }
         }
 
@@ -69,17 +87,16 @@ namespace CashFlowManagement.Tests.Core.repositories
             {
                 _context.Staffs.Add(sampleEmployee);
                 _context.SaveChanges();
-                Staff employee = _context.Staffs.Single();
                 Expense staffExpense = new Expense
                 (
                     "Unitest_Expenses",
                     30000,
-                    employee.Id
+                    sampleEmployee.Id
                 );
 
-                employee.Expenses.Add(staffExpense);
-                _context.SaveChanges();
-                Expense queryObj = repo.GetExpense(_context.Expenses.Single().Id);
+                repo.Create(staffExpense);
+                Expense savedExpense = repo.GetExpense(_context.Expenses.Single().Id);
+                Assert.AreEqual("Unitest_Expenses", savedExpense.Description);
             }
         }
         
@@ -108,11 +125,13 @@ namespace CashFlowManagement.Tests.Core.repositories
                 var staff = _context.Staffs.Single();
                 repo.Create(new Expense("E1", 2000, staff.Id));
                 Expense expense = _context.Expenses.Single();
-                repo.Update("Test_Expenditure", 45000, expense.Id);
+                expense.Description = "Test_Expenditure";
+                expense.Cost = 45000;
+                repo.Update(expense);
                 Assert.IsNotNull(_context.Expenses.Where(x => x.Description == "Test_Expenditure").Single());
             }
         }
-        /*
+
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Delete_Saved_Expense_From_DataBase()
         {
@@ -132,5 +151,5 @@ namespace CashFlowManagement.Tests.Core.repositories
                 Assert.AreEqual(1, _context.Expenses.Count());
             }
         }
-    */}
+    }
 }

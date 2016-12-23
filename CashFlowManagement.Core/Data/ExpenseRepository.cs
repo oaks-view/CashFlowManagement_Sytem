@@ -33,10 +33,6 @@ namespace CashFlowManagement.Core.Data
         public Expense GetExpense(int expenseId)
         {
             Expense expense = _db.Expenses.Find(expenseId);
-            if (expense == null)
-            {
-                throw new NoMatchFound("No record for Expense with this Id was found.");
-            }
             return expense;
         }
 

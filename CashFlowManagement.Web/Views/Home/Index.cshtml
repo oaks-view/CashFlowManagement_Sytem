@@ -3,6 +3,7 @@
     Layout = null;
 }
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,6 +46,7 @@
                         console.log(response);
                         displayLogin(false)
                         registerStaff();
+                        GetStaffDetails();
 
                     },
                     error: function (jqXHR) {
@@ -95,7 +97,7 @@
         }
         function registerStaff() {
             $.ajax({
-                url: "api/Staff",
+                url: "api/Staff/Post",
                 method: "Post",
                 contentType: "application/json",
                 headers: {
@@ -110,6 +112,7 @@
             });
         }
 
+
         function displayRegistrationPage() {
             $('#login-layout').removeClass("hidden").addClass("hidden");
             $("#registration-layout").addClass("hidden").removeClass("hidden");
@@ -118,6 +121,30 @@
         function clearLoginFields() {
             $("#txtEmailLogin").val("");
             $("#txtPasswordLogin").val("");
+        }
+
+        function GetStaffDetails() {
+            var defer = jQuery.Deferred()
+            var userid = sessionStorage.getItem("userid");
+            $.ajax({
+                url: "api/Staff/Get",
+                method: "GET",
+                //data: JSON.stringify({ userId: userid }),
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
+                },
+                success: function (response) {
+                    sessionStorage.setItem("currentStaff", response);
+                    alert("WHAT IS GOING ON MEN");
+                    console.log(response)
+                    defer.resolve(true);
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.reponse);
+                    defer.resolve(true);
+                }
+            })
+            return defer.promise();
         }
         
     </script>

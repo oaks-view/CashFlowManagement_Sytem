@@ -6,7 +6,6 @@ using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.ExceptionHandling;
-using Elmah.Contrib.WebApi;
 
 namespace CashFlowManagement.Web
 {
@@ -24,7 +23,7 @@ namespace CashFlowManagement.Web
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
 

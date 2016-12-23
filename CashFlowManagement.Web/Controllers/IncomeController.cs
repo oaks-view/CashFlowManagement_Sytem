@@ -1,5 +1,6 @@
 ﻿using CashFlowManagement.Core.Models;
 using CashFlowManagement.Core.Services;
+using log4net;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -9,19 +10,31 @@ namespace CashFlowManagement.Web.Controllers
     public class IncomeController : ApiController
     {
         private IIncomeService _incomeService;
+        //log4net
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public IncomeController(IIncomeService service)
         {
             _incomeService = service;
         }
 
-        public List<Income> Get()
+        public IHttpActionResult Get()
         {
-            return _incomeService.GetAllIncome();
+            var incomes = _incomeService.GetAllIncome();
+            if (incomes == null)
+            {
+                return NotFound();
+            }
+            return Ok(incomes);
         }
 
-        public Income Get(int incomeId)
+        public IHttpActionResult Get(int incomeId)
         {
-            return _incomeService.GetIncome(incomeId);
+            var income = _incomeService.GetIncome(incomeId);
+            if (income == null)
+            {
+                return NotFound();
+            }
+            return Ok(income);
         }
 
         public void Post([FromBody]Income values)
@@ -40,18 +53,24 @@ namespace CashFlowManagement.Web.Controllers
             _incomeService.CreateIncome(values);
         }
 
-        [HttpGet]
-        [Route("MonthlyIncome")]
-        public Dictionary<string, int> GetMonthlyIncome()
+        public IHttpActionResult GetMonthlyIncome()
         {
-            return _incomeService.GetMonthlyIncome();
+            var monthlyIncome = _incomeService.GetMonthlyIncome();
+            if (monthlyIncome == null)
+            {
+                return NotFound();
+            }
+            return Ok(monthlyIncome);
         }
 
-        [HttpGet]
-        [Route("YearlyIncome")]
-        public Dictionary<string, int> GetYearlyIncome()
+        public IHttpActionResult GetYearlyIncome()
         {
-            return _incomeService.GetYearlyIncome();
+            var yearlyIncomes =  _incomeService.GetYearlyIncome();
+            if (yearlyIncomes == null)
+            {
+                return NotFound();
+            }
+            return Ok(yearlyIncomes);
         }
 
         public void Delete(int incomeId)

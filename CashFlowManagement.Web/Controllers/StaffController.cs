@@ -14,21 +14,41 @@ namespace CashFlowManagement.Web.Controllers
     [Authorize]
     public class StaffController : ApiController
     {
-        private IStaffService _service;
+        private IStaffService _staffService;
 
         public StaffController(IStaffService staffService)
         {
-            _service = staffService;
+            _staffService = staffService;
         }
 
-        public Staff Get(string userId)
+        public IHttpActionResult Get(string userId)
         {
-            return _service.GetStaff(userId);
+            var staff = _staffService.GetStaff(userId);
+            if (staff == null)
+            {
+                return NotFound();
+            }
+            return Ok(staff);
         }
 
-        public List<Staff> Get()
+        public IHttpActionResult GetSavedIncome(string staffId)
         {
-            return _service.GetAllStaffs();
+            var savedIncomes = _staffService.GetAllSavedIncomes(staffId);
+            if (savedIncomes == null)
+            {
+                return NotFound();
+            }
+            return Ok(savedIncomes);
+        }
+
+        public IHttpActionResult Get()
+        {
+            var staffs = _staffService.GetAllStaffs();
+            if (staffs == null)
+            {
+                return NotFound();
+            }
+            return Ok(staffs);
         }
 
         public void Post()
@@ -41,7 +61,17 @@ namespace CashFlowManagement.Web.Controllers
             };
             bool userRole = User.IsInRole("Manager");
             staff.StaffCategory = userRole ? (int)StaffsCategory.Manager : (int)StaffsCategory.Employee;
-            _service.CreateStaff(staff);
+            _staffService.CreateStaff(staff);
+        }
+
+        public IHttpActionResult GetAllSavedExpenses(string staffId)
+        {
+            var allSavedExpenses = _staffService.GetAllSavedExpenses(staffId);
+            if (allSavedExpenses == null)
+            {
+                return NotFound();
+            }
+            return Ok(allSavedExpenses);
         }
     }
 }
