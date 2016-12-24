@@ -10,8 +10,7 @@ namespace CashFlowManagement.Web.Controllers
     public class IncomeController : ApiController
     {
         private IIncomeService _incomeService;
-        //log4net
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
         public IncomeController(IIncomeService service)
         {
             _incomeService = service;
