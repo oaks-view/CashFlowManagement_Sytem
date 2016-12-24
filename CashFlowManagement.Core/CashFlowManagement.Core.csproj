@@ -69,6 +69,7 @@
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\StaffsCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EntitySort.cs" />
     <Compile Include="Services\ExpenseService.cs" />
     <Compile Include="Services\IExpenseService.cs" />
     <Compile Include="Services\IIncomeService.cs" />
