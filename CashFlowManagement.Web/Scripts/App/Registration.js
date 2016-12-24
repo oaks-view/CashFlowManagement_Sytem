@@ -23,6 +23,10 @@
         $("#divError").hide('fade')
     });
 
+    $("#regLinkClose").on("click", function () {
+        $("#regDivError").hide('fade')
+    });
+
     $("#btnRegister").on("click", function () {
         $.ajax({
             url: "api/account/register",
@@ -40,8 +44,8 @@
                 $("#successModal").modal('show');
             },
             error: function (jqXHR) {
-                $("#divErrorText").text(jqXHR.responseText);
-                $("#divError").show("fade");
+                $("#regDivErrorText").text(jqXHR.responseText);
+                $("#regDivError").show("fade");
             }
         });
     });

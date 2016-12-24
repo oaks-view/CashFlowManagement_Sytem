@@ -73,5 +73,15 @@ namespace CashFlowManagement.Web.Controllers
             }
             return Ok(allSavedExpenses);
         }
+
+        public IHttpActionResult GetStaffCategory(string staffId)
+        {
+            var staffCategory = _staffService.GetStaffCategory(staffId);
+            if (staffCategory == default(int))
+            {
+                return NotFound();
+            }
+            return Ok(staffCategory);
+        }
     }
 }

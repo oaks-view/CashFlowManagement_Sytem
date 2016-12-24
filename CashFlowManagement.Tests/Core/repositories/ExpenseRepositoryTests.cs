@@ -9,6 +9,7 @@ using CashFlowManagement.Core;
 using System.Linq;
 using CashFlowManagement.Core.Models.DB;
 using static CashFlowManagement.Tests.Core.TestData;
+using System.Collections.Generic;
 
 namespace CashFlowManagement.Tests.Core.repositories
 {
@@ -99,7 +100,7 @@ namespace CashFlowManagement.Tests.Core.repositories
                 Assert.AreEqual("Unitest_Expenses", savedExpense.Description);
             }
         }
-        
+
         [TestMethod, TestCategory(Constants.IntegrationTest)]
         public void Can_Retrieve_All_Expenses_From_Database()
         {

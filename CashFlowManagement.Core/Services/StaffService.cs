@@ -71,5 +71,11 @@ namespace CashFlowManagement.Core.Services
             var incomes = manager.Incomes;
             return incomes.ToList();
         }
+
+        public int GetStaffCategory(string staffId)
+        {
+            var staff = GetStaff(staffId);
+            return (int)staff.StaffCategory;
+        }
     }
 }

@@ -9,6 +9,7 @@ using static CashFlowManagement.Tests.Core.TestData;
 using EmployeeManagement.Tests;
 using System.Collections.Generic;
 using System.Web.Http.Results;
+using System.Linq;
 
 namespace CashFlowManagement.Tests.web
 {
@@ -51,6 +52,13 @@ namespace CashFlowManagement.Tests.web
 
             _mockExpenseService
                 .Setup(x => x.DeleteExpense(It.IsAny<int>())).Verifiable();
+
+            _mockExpenseService
+                .Setup(x => x.GetStaffExpenses(It.IsAny<string>()))
+                .Returns((string input) =>
+                {
+                    return _sampleExpenses.Where(e => e.StaffId == input).ToList();
+                });
         }
         [TestMethod, TestCategory(Constants.UnitTest)]
         public void Get_Can_Retrieve_All_Saved_Expenses()
@@ -122,7 +130,14 @@ namespace CashFlowManagement.Tests.web
             _mockExpenseService.Verify(x => x.DeleteExpense(It.Is<int>(input =>
             input == savedExpense.Id
             )));
+        }
 
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void GetStaffExpenses_Can_Retrieve_A_Staffs_Expenses()
+        {
+            var controller = new ExpenseController(_mockExpenseService.Object);
+            var apiCallValue = controller.GetStaffExpenses(sampleEmployee.Id);
+            Assert.IsInstanceOfType(apiCallValue, typeof(OkNegotiatedContentResult<List<Expense>>));
         }
     }
 }

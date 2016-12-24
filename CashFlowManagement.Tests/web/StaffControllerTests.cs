@@ -60,6 +60,12 @@ namespace CashFlowManagement.Tests.web
                 {
                     return TestData._sampleExpenses.Where(x => x.StaffId == input).ToList<Expense>();
                 });
+            _staffServiceMock
+                .Setup(x => x.GetStaffCategory(It.IsAny<string>()))
+                .Returns((string input) =>
+                {
+                    return _sampleStaffs.Find(x => x.Id == input).StaffCategory;
+                });
         }
         [TestMethod, TestCategory(Constants.UnitTest)]
         public void Get_Retrieves_All_Saved_Staffs()
@@ -92,6 +98,14 @@ namespace CashFlowManagement.Tests.web
             var controller = new StaffController(_staffServiceMock.Object);
             var apiCallResult = controller.GetAllSavedExpenses(_sampleStaffs[1].Id);
             Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<List<Expense>>));
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Get_Staff_Category_Works_Correctly()
+        {
+            var controller = new StaffController(_staffServiceMock.Object);
+            var apiCallResult = controller.GetStaffCategory(_sampleStaffs[0].Id);
+            Assert.IsInstanceOfType(apiCallResult, typeof(OkNegotiatedContentResult<int>));
         }
     }
 }

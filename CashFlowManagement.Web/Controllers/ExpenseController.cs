@@ -78,5 +78,15 @@ namespace CashFlowManagement.Web.Controllers
         {
             _expenseService.DeleteExpense(expenseId);
         }
+
+        public IHttpActionResult GetStaffExpenses(string staffId)
+        {
+            var staffExpenses = _expenseService.GetStaffExpenses(staffId);
+            if (staffExpenses.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(staffExpenses);
+        }
     }
 }

@@ -18,6 +18,7 @@
     <div class="container" id="mainWindow">
     </div>
     <div id="login-layout" class="hidden"></div>
+    <div id="employee-layout" class="hidden"></div>
     <div id="manager-layout" class="hidden"></div>
     <div id="registration-layout" class="hidden"></div>
 
@@ -44,9 +45,8 @@
                         sessionStorage.setItem('username', response.userName);
                         sessionStorage.setItem('userid', response.userId);
                         console.log(response);
-                        displayLogin(false)
                         registerStaff();
-                        GetStaffDetails();
+                        getStaffCategory();
 
                     },
                     error: function (jqXHR) {
@@ -61,6 +61,7 @@
             sessionStorage.removeItem("userid");
             sessionStorage.removeItem("username");
             sessionStorage.removeItem("expires");
+            sessionStorage.removeItem("staffCategory");
             displayLogin(true);
         }
         
@@ -75,6 +76,9 @@
         $("#registration-layout").load("/templates/Registration.html", function () {
             $.getScript("/Scripts/App/Registration.js");
         })
+        $("#employee-layout").load("/templates/EmployeePage.html", function () {
+            $.getScript("/Scripts/App/EmployeeSession.js")
+        });
 
     </script>
     <script>
@@ -82,13 +86,26 @@
             if (status) {
                 $('#login-layout').addClass("hidden").removeClass("hidden")
                 $('#manager-layout').removeClass("hidden").addClass("hidden")
+                $('#employee-layout').removeClass("hidden").addClass("hidden")
                 $("#registration-layout").removeClass("hidden").addClass("hidden");
                 clearLoginFields();
             } else {
+                staffCategory = sessionStorage.getItem("staffCategory");
                 $('#login-layout').removeClass("hidden").addClass("hidden")
-                $('#manager-layout').addClass("hidden").removeClass("hidden")
+                if (staffCategory == "2244") {
+                    $("#employee-layout").addClass("hidden").removeClass("hidden");
+                    return
+                }
+                else if (staffCategory == "3366") {
+                    $('#manager-layout').addClass("hidden").removeClass("hidden");
+                }
+
+                else
+                    $("#divErrorText").text("Error: User detail is missing contact admin");
+                    $("#divError").show("fade");
             }
         }
+
         var accessToken = sessionStorage.getItem("accessToken");
         if (accessToken) {
             displayLogin(false)
@@ -123,19 +140,41 @@
             $("#txtPasswordLogin").val("");
         }
 
+        function getStaffCategory() {
+            var userid = sessionStorage.getItem("userid");
+            $.ajax({
+                url: "api/Staff/GetStaffCategory?staffId=" + userid,
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
+                },
+                success: function (response) {
+                    sessionStorage.setItem("staffCategory", response.toString());
+                    displayLogin(false);
+                },
+                error: function (jqXHR) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        }
+
+        function saveCategory(dto) {
+            $.each(dto, function (index, value) {
+                sessionStorage.setItem("staffCategory", value.toString());
+            })
+        }
+
         function GetStaffDetails() {
             var defer = jQuery.Deferred()
             var userid = sessionStorage.getItem("userid");
             $.ajax({
-                url: "api/Staff/Get",
+                url: "api/Staff/Get?userId=" + sessionStorage.getItem("userid"),
                 method: "GET",
-                //data: JSON.stringify({ userId: userid }),
                 headers: {
                     "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
                 },
                 success: function (response) {
                     sessionStorage.setItem("currentStaff", response);
-                    alert("WHAT IS GOING ON MEN");
                     console.log(response)
                     defer.resolve(true);
                 },

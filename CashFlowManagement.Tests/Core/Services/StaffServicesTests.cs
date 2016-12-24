@@ -105,5 +105,13 @@ namespace CashFlowManagement.Tests.Core.Services
             var savedExpenses = service.GetAllSavedIncomes(sampleManager.Id);
             Assert.AreEqual(2, savedExpenses.Count);
         }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Get_StaffCategory_From_Retrieved_Staff()
+        {
+            var service = new StaffService(_staffRepoMock.Object);
+            int staffCategory = service.GetStaffCategory(sampleEmployee.Id);
+            Assert.AreEqual((int)StaffsCategory.Employee, staffCategory);
+        }
     }
 }

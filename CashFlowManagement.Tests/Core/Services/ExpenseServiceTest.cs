@@ -129,5 +129,14 @@ namespace CashFlowManagement.Tests.Core.Services
             input == savedExpense.Id
             )));
         }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Retrieve_Expenses_By_Staffs_Id()
+        {
+            var service = new ExpenseService(_mockExpenseRepo.Object);
+            var staffExpenses = _sampleExpenses.Where(x => x.StaffId == sampleEmployee.Id).ToList<Expense>();
+            var dbExpenses = service.GetStaffExpenses(sampleEmployee.Id);
+            Assert.AreEqual(staffExpenses.Count, dbExpenses.Count);       
+        }
     }
 }

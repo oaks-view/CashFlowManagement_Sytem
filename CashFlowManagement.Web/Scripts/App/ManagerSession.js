@@ -1,28 +1,36 @@
 ﻿
 
-(function () {
-    alert("ManagerSESSION LOADED")
+(function () { 
     $("#logout-btn").on("click", managerLogout);
-    $("#add-income-btn").on("click", function () { $("#addIncomeModal").modal("show") });
-    $("#add-expense-btn").on("click", function () { alert("ADD EXPENSES YEEAHHH"); $("#addExpenseModal").modal("show"); return false; });
-    $("#get-saved-expenses-btn").on("click", function () { getAllSavedExpenses();});
-    $("#get-saved-incomes-btn").on("click", getAllSavedIncome);
+    $("#add-income-btn").on("click", function () { $("#addIncomeModal").modal("show"); $("#toggler").bootstrapToggle("on"); });
+    $("#add-expense-btn").on("click", function () { $("#addExpenseModal").modal("show"); $("#toggler").bootstrapToggle("off");return false; });
+    $("#get-saved-expenses-btn").on("click", function () { getAllSavedExpenses(); $("#toggler").bootstrapToggle("off"); });
+    $("#get-saved-incomes-btn").on("click", function () { getAllSavedIncome(); $("#toggler").bootstrapToggle("on"); })// getAllSavedIncome);
     $("#saveNewIncomeButton").on("click", saveNewIncome);
     $("#saveNewExpenseBtn").on("click", function () { saveNewExpense(); });
     $("#cancel").on("click", clearModalPopupFields);
-    $("#manager-monthly-income").on("click", function (e) { e.preventDefault(); getSavedIncomesByMonth(); })
-    $("#manager-yearly-income").on("click", function (e) { e.preventDefault(); getSavedIncomeByYear(); })
-    $("#manager-saved-incomes").on("click", function (e) { e.preventDefault(); getManagerSavedIncomes(); })
-    $("#manager-monthly-expenses").on("click", function (e) { e.preventDefault(); getMonthlyExpenses(); });
-    $("#manager-yearly-expenses").on("click", function (e) { e.preventDefault(); getYearlyExpenses();})
+    $("#manager-monthly-income").on("click", function (e) { e.preventDefault(); getSavedIncomesByMonth(); $("#toggler").bootstrapToggle("on") })
+    $("#manager-yearly-income").on("click", function (e) { e.preventDefault(); getSavedIncomeByYear(); $("#toggler").bootstrapToggle("on") })
+    $("#manager-saved-incomes").on("click", function (e) { e.preventDefault(); getManagerSavedIncomes(); $("#toggler").bootstrapToggle("on"); })
+    $("#manager-saved-expenses").on("click", function (e) { e.preventDefault(); getManagerSavedExpenses(); $("#toggler").bootstrapToggle("off"); })
+    $("#manager-monthly-expenses").on("click", function (e) { e.preventDefault(); getMonthlyExpenses(); $("#toggler").bootstrapToggle("off"); });
+    $("#manager-yearly-expenses").on("click", function (e) { e.preventDefault(); getYearlyExpenses(); $("#toggler").bootstrapToggle("off"); })
 
     function managerLogout() {
         sessionStorage.removeItem("accessToken");
         sessionStorage.removeItem("userid");
         sessionStorage.removeItem("username");
         sessionStorage.removeItem("expires");
+        sessionStorage.removeItem("staffCategory");
         displayLogin(true);
         return false;
+    }
+
+    function clearAll() {
+        var container = document.getElementById("table-container");
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
     }
 
     function clearModalPopupFields() {
@@ -35,6 +43,30 @@
         $("#expenseAmount").val("");
     }
 
+    
+    function getManagerSavedExpenses() {
+        var defer = jQuery.Deferred();
+        $.ajax({
+            url: "api/Expense/GetStaffExpenses?staffId=" + sessionStorage.getItem("userid"),
+            method: "GET",
+            contentType: "application/json",
+            headers: {
+                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
+            },
+            success: function (response) {
+                console.log(response);
+                clearAll();
+                displayAllIncome(response, false);
+                defer.resolve(true);
+            },
+            error: function (jqXHR) {
+                console.log(jqXHR.responseText);
+            }
+        });
+        return defer.promise();
+    }
+
+
     function getAllSavedExpenses() {
         defer = jQuery.Deferred();
         $.ajax({
@@ -45,6 +77,8 @@
             },
             success: function (response) {
                 console.log(response);
+                clearAll();
+                displayAllIncome(response,false);
                 defer.resolve(true);
             },
             error: function (jqXHR) {
@@ -64,6 +98,8 @@
             },
             success: function (response) {
                 console.log(response);
+                clearAll();
+                displayPeriodically(response);
                 defer.resolve(true);
             },
             error: function (jqXHR) {
@@ -83,6 +119,8 @@
             },
             success: function (response) {
                 console.log(response);
+                clearAll();
+                displayPeriodically(response);
                 defer.resolve(true);
             },
             error: function (jqXHR) {
@@ -104,6 +142,16 @@
         }
     }
 
+    function displayPeriodically(dto) {
+        $.each(dto, function (index, value) {
+            var div = document.createElement("div");
+            div.innerHTML = createPeriodicElement(index, value);
+            div.onclick = function () { alert('PERIODIC INCOMES HERE')};
+            var container = document.getElementById("table-container");
+            container.appendChild(div);
+        });
+    }
+
     function getSavedIncomeByYear() {
         var defer = jQuery.Deferred();
         $.ajax({
@@ -114,6 +162,9 @@
             },
             success: function (response) {
                 console.log(response);
+                clearAll();
+                displayPeriodically(response);
+                $("#toggler").bootstrapToggle("on");
                 defer.resolve(true);
             },
             fail: function (jqXHR) {
@@ -122,7 +173,6 @@
         });
         return defer.promise();
     }
-
 
     function getSavedIncomesByMonth() {
         var defer = jQuery.Deferred();
@@ -134,6 +184,8 @@
             },
             success: function (response) {
                 console.log(response);
+                clearAll();
+                displayPeriodically(response);
                 defer.resolve(true);
             },
             fail: function (jqXHR) {
@@ -146,7 +198,7 @@
     function getManagerSavedIncomes() {
         var defer = jQuery.Deferred();
         $.ajax({
-            url: "api/Staff/GetSavedIncome" + "/userId=" + sessionStorage.getItem("userid"),
+            url: "api/Staff/GetSavedIncome?" + "StaffId=" + sessionStorage.getItem("userid"),
             method: "GET",
             //data: JSON.stringify(sessionStorage.getItem("userid")),
             headers: {
@@ -154,6 +206,7 @@
             },
             success: function (response) {
                 console.log(response);
+                displayAllIncome(response);
                 defer.resolve(true);
             },
             error: function (jqXHR) {
@@ -173,8 +226,7 @@
                 "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
             },
             success: function (response) {
-                var refined = response;
-                console.log(refined);
+                clearAll();
                 displayAllIncome(response);
                 defer.resolve(true);
             },
@@ -192,7 +244,6 @@
             Amount: $("#incomeAmount").val(),
             StaffId: sessionStorage.getItem("userid")
         };
-        alert(JSON.stringify(income));
         $.ajax({
             url: "api/Income/Post",
             method: "POST",
@@ -204,6 +255,8 @@
             success: function () {
                 $("#addIncomeModal").modal("hide");
                 clearModalPopupFields();
+                getAllSavedIncome();
+                
             },
             error: function (jqXHR) {
                 console.log(jqXHR);
@@ -218,7 +271,6 @@
             Cost: $("#expenseAmount").val(),
             StaffId: sessionStorage.getItem("userid")
         };
-        alert(JSON.stringify(expense));
         $.ajax({
             url: "api/Expense/Post",
             contentType: "application/json",
@@ -230,6 +282,7 @@
             success: function () {
                 $("#addExpenseModal").modal("hide");
                 clearExpenseModalPopupFields();
+                getAllSavedExpenses();
             },
             error: function (jqXHR) {
                 console.log(jqXHR.response);
@@ -237,37 +290,42 @@
         });
     }
 
+    function parseDate(cdate) {
+        var date = new Date(Date.parse(cdate));
+        return date.toISOString().split("T")[0];
+    }
 
-
-   /* <div class="container" id="table-container">
-        
-        <div class="list-group"><!--expenses element-->>
-            <a href="#" class="list-group-item active">
-                <h4 class="list-group-item-heading">Monthly Subscription</h4>
-                <p class="list-group-item-text">
-                    <label>$30000</label>
-                </p>
-            </a>
-        </div>
-    </div>*/
-
-    function displayAllIncome(dto) {
+    function displayAllIncome(dto,status) {
         var tableContainer = document.getElementById("table-container");
         $.each(dto, function (index, values) {
             var node = document.createElement("div");
             node.id = values.id;
             node.date = values.date;
-            node.onclick = function (e) { alert("PLEASE WORKKKKKKKK "+ node.id) };
-            node.innerHTML = createElement(values.description, values.amount);
-            alert(node);
+            node.onclick = function (e) { alert("PLEASE WORKKKKKKKK " + node.id) };
+            if (status == false) {
+                node.innerHTML = createElement(values.description, values.cost, parseDate(values.dateCreated));
+            }
+            else
+                node.innerHTML = createElement(values.description, values.amount, parseDate(values.dateCreated));
             tableContainer.appendChild(node);
         })
     }
 
-    function createElement(description, amount) {
+    function createElement(description, amount, date) {
         var div = "<div class='list-group'> "
             + "<a href='javascript:void(0)' class='list-group-item active'}>"
+            + "<h4 class='list-group-item-heading'>" + date + "</h4>"
             + "<h4 class='list-group-item-heading'>" + description + "</h4>"
+            + "<p class='list-group-item-text'>"
+            + "<label>" + "$" + amount + "</label>" + "</p>" + "</a>"
+            + "</div>";
+        return div;
+    }
+
+    function createPeriodicElement(period, amount) {
+        var div = "<div class='list-group'> "
+            + "<a href='javascript:void(0)' class='list-group-item active'}>"
+            + "<h4 class='list-group-item-heading'>" + period + "</h4>"
             + "<p class='list-group-item-text'>"
             + "<label>" + "$" + amount + "</label>" + "</p>" + "</a>"
             + "</div>";

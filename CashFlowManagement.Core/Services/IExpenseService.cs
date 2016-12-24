@@ -15,5 +15,6 @@ namespace CashFlowManagement.Core.Services
         Dictionary<String, int> GetMonthlyExpenses();
         Dictionary<string, int> GetYearlyExpenses();
         void DeleteExpense(int expenseId);
+        List<Expense> GetStaffExpenses(string staffId);
     }
 }

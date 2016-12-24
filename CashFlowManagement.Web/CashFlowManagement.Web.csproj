@@ -258,6 +258,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\App\EmployeeSession.js" />
     <Content Include="Scripts\App\Login.js" />
     <Content Include="Scripts\App\ManagerSession.js" />
     <Content Include="Scripts\App\Registration.js" />
@@ -297,6 +298,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="templates\AddExpenseModal.html" />
     <Content Include="templates\AddIncomeModal.html" />
+    <Content Include="templates\EmployeePage.html" />
     <Content Include="templates\Login.html" />
     <Content Include="templates\ManagerPage.html" />
     <Content Include="templates\Registration.html" />

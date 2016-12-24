@@ -16,5 +16,6 @@ namespace CashFlowManagement.Core.Services
         List<Staff> GetAllEmployees();
         List<Income> GetAllSavedIncomes(string staffId);
         List<Expense> GetAllSavedExpenses(string staffId);
+        int GetStaffCategory(string staffId);
     }
 }
