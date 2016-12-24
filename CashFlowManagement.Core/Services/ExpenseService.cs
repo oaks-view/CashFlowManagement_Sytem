@@ -35,7 +35,7 @@ namespace CashFlowManagement.Core.Services
         public List<Expense> GetAllExpense()
         {
             var allExpenses = _expenseRepository.GetAllExpenses();
-            return allExpenses;
+            return SortedList(allExpenses);
         }
 
         public Dictionary<String, int> GetMonthlyExpenses()
@@ -65,7 +65,7 @@ namespace CashFlowManagement.Core.Services
             List<Expense> staffExpenses = allExpenses
                 .Where(e => e.StaffId == staffId)
                 .ToList<Expense>();
-            return staffExpenses;
+            return SortedList(staffExpenses);
         }
     }
 }

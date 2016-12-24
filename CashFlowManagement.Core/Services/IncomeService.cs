@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CashFlowManagement.Core.Services.EntitySort;
 
 namespace CashFlowManagement.Core.Services
 {
@@ -35,7 +36,7 @@ namespace CashFlowManagement.Core.Services
         public List<Income> GetAllIncome()
         {
             var allIncome = _incomeRepository.GetAllIncome();
-            return allIncome;
+            return SortedList(allIncome);
         }
 
         public Dictionary<string, int > GetMonthlyIncome()

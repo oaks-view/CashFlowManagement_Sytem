@@ -46,7 +46,6 @@
                         sessionStorage.setItem('userid', response.userId);
                         console.log(response);
                         registerStaff();
-                        getStaffCategory();
 
                     },
                     error: function (jqXHR) {
@@ -122,6 +121,7 @@
                 },
                 success: function (response) {
                     console.log(response);
+                    getStaffCategory();
                 },
                 error: function (jqXHR) {
                     console.log(jqXHR.responseText);
