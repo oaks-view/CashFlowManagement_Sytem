@@ -3,191 +3,26 @@
     Layout = null;
 }
 
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-    <meta charset="utf-8" />
-    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
-
-
+    <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" href="~/Content/materialize/css/materialize.min.css" rel="stylesheet" media="screen,projection" />
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
-<body style="padding-top:20px">
 
-    <div class="container" id="mainWindow">
-    </div>
-    <div id="login-layout" class="hidden"></div>
-    <div id="employee-layout" class="hidden"></div>
-    <div id="manager-layout" class="hidden"></div>
-    <div id="registration-layout" class="hidden"></div>
+<body>
 
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!--THIS IS OUR MAIN LAYOUT FOR THE ONE PAGE APP-->
+    <div id="page-container"></div>
 
 
-
-    <script>
-        function LoginUser() {
-            $("#login-btn").click(function () {
-                $.ajax({
-                    url: "/token",
-                    method: "POST",
-                    contentType: "application/json",
-                    data: {
-                        Username: $("#txtEmailLogin").val(),
-                        Password: $("#txtPasswordLogin").val(),
-                        grant_type: "password"
-                    },
-                    success: function (response) {
-                        sessionStorage.setItem("accessToken", response.access_token);
-                        sessionStorage.setItem('expires', response['.expires']);
-                        sessionStorage.setItem('username', response.userName);
-                        sessionStorage.setItem('userid', response.userId);
-                        console.log(response);
-                        registerStaff();
-
-                    },
-                    error: function (jqXHR) {
-                        $("#divErrorText").text(jqXHR.responseText);
-                        $("#divError").show("fade");
-                    }
-                });
-            })
-        }
-        function managerLogout() {
-            sessionStorage.removeItem("accessToken");
-            sessionStorage.removeItem("userid");
-            sessionStorage.removeItem("username");
-            sessionStorage.removeItem("expires");
-            sessionStorage.removeItem("staffCategory");
-            displayLogin(true);
-        }
-        
-        //LOAD ALL TEMPLATES AND RESPECTIVE SCRIPTS
-        $("#login-layout").load("/templates/Login.html", function () {
-            LoginUser();
-            $("#register-btn-top").on("click", displayRegistrationPage);
-        });
-        $('#manager-layout').load('/templates/ManagerPage.html', function () {
-            $.getScript('/Scripts/App/ManagerSession.js')
-        })
-        $("#registration-layout").load("/templates/Registration.html", function () {
-            $.getScript("/Scripts/App/Registration.js");
-        })
-        $("#employee-layout").load("/templates/EmployeePage.html", function () {
-            $.getScript("/Scripts/App/EmployeeSession.js")
-        });
-
-    </script>
-    <script>
-        function displayLogin(status) {
-            if (status) {
-                $('#login-layout').addClass("hidden").removeClass("hidden")
-                $('#manager-layout').removeClass("hidden").addClass("hidden")
-                $('#employee-layout').removeClass("hidden").addClass("hidden")
-                $("#registration-layout").removeClass("hidden").addClass("hidden");
-                clearLoginFields();
-            } else {
-                staffCategory = sessionStorage.getItem("staffCategory");
-                $('#login-layout').removeClass("hidden").addClass("hidden")
-                if (staffCategory == "2244") {
-                    $("#employee-layout").addClass("hidden").removeClass("hidden");
-                    return
-                }
-                else if (staffCategory == "3366") {
-                    $('#manager-layout').addClass("hidden").removeClass("hidden");
-                }
-
-                else
-                    $("#divErrorText").text("Error: User detail is missing contact admin");
-                    $("#divError").show("fade");
-            }
-        }
-
-        var accessToken = sessionStorage.getItem("accessToken");
-        if (accessToken) {
-            displayLogin(false)
-        } else {
-            displayLogin(true)
-        }
-        function registerStaff() {
-            $.ajax({
-                url: "api/Staff/Post",
-                method: "Post",
-                contentType: "application/json",
-                headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-                },
-                success: function (response) {
-                    console.log(response);
-                    getStaffCategory();
-                },
-                error: function (jqXHR) {
-                    console.log(jqXHR.responseText);
-                }
-            });
-        }
-
-
-        function displayRegistrationPage() {
-            $('#login-layout').removeClass("hidden").addClass("hidden");
-            $("#registration-layout").addClass("hidden").removeClass("hidden");
-        }
-
-        function clearLoginFields() {
-            $("#txtEmailLogin").val("");
-            $("#txtPasswordLogin").val("");
-        }
-
-        function getStaffCategory() {
-            var userid = sessionStorage.getItem("userid");
-            $.ajax({
-                url: "api/Staff/GetStaffCategory?staffId=" + userid,
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-                },
-                success: function (response) {
-                    sessionStorage.setItem("staffCategory", response.toString());
-                    displayLogin(false);
-                },
-                error: function (jqXHR) {
-                    console.log(jqXHR.responseText);
-                }
-            });
-        }
-
-        function saveCategory(dto) {
-            $.each(dto, function (index, value) {
-                sessionStorage.setItem("staffCategory", value.toString());
-            })
-        }
-
-        function GetStaffDetails() {
-            var defer = jQuery.Deferred()
-            var userid = sessionStorage.getItem("userid");
-            $.ajax({
-                url: "api/Staff/Get?userId=" + sessionStorage.getItem("userid"),
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-                },
-                success: function (response) {
-                    sessionStorage.setItem("currentStaff", response);
-                    console.log(response)
-                    defer.resolve(true);
-                },
-                error: function (jqXHR) {
-                    console.log(jqXHR.reponse);
-                    defer.resolve(true);
-                }
-            })
-            return defer.promise();
-        }
-        
-    </script>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="~/Scripts/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/materialize/materialize.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/App/dist/app.bundle.js"></script>
 </body>
 </html>
-
-

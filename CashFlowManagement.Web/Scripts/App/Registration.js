@@ -1,52 +1,77 @@
-﻿$(function () {
-    var staffCategory = "Employee";
-    $("#staff1").on("click", function () { staffCategory = "Employee";});
-    $("#staff2").on("click", function () { staffCategory = "Manager"; });
+﻿import React from "react";
+import ReactDOM from "react-dom";
+import {render} from "react-dom";
 
-    function displayLogInPage() {
-        displayLogin(true);
-    };
 
-    function clearRegistrationFields() {
-        $("#txtFirstName").val("");
-        $("#txtLastName").val("");
-        $("#txtEmail").val("");
-        $("#txtPassword").val("");
-        $("#txtConfirmPassword").val("");
-    };
+function RegistrationPage(){
+    return (
+        <div className="container">
+            <h2 className="header" style={{color:"rgb(238, 110, 115)"}}>New Staff registration</h2>
+            <div className = "row">
+                <form className="col s12">
+                    <div className= "row">{/*row 1*/}
+                        <div className = "input-field col s6">
+                            <input id="first-name" type="text" className="validate"/>
+                            <label htmlFor="first-name">First Name</label>
+                        </div>
+                        <div className="input-field col s6">
+                            <input id="last-name" type="text" className="validate"/>
+                            <label htmlFor="last-name">Last Name</label>
+                        </div>
+                    </div>{/*row 1 ends here*/}
 
-    $("#topLoginBtn").on("click", function () {
-        displayLogInPage();
-    });
+                    <div className = "row">{/*EMAIL FIELD*/}
+                        <div className="input-field col s12">
+                            <input id="reg-email" type="email" className="validate"/>
+                            <label htmlFor="reg-email">Email</label>
+                        </div>
+                    </div>{/*row3 ends here*/}
 
-    $("#linkClose").on("click",function () {
-        $("#divError").hide('fade')
-    });
+                    <div className="row">{/*password */}
+                        <div className="input-field col s12">
+                            <input id="reg-password" type="password" className="validate"/>
+                            <label htmlFor="reg-password">Password</label>
+                        </div>
+                    </div>{/*row2 ends here*/}
 
-    $("#regLinkClose").on("click", function () {
-        $("#regDivError").hide('fade')
-    });
+                    <div className="row">{/*row2*/}
+                        <div className="input-field col s12">
+                            <input id="reg-confrim-password" type="password" className="validate"/>
+                            <label htmlFor="reg-confirm-password">Confirm Password</label>
+                        </div>
+                    </div>{/*row2 ends here*/}              
 
-    $("#btnRegister").on("click", function () {
-        $.ajax({
-            url: "api/account/register",
-            method: "POST",
-            data: {
-                FirstName: $("#txtFirstName").val(),
-                LastName: $("#txtLastName").val(),
-                Email: $("#txtEmail").val(),
-                Password: $("#txtPassword").val(),
-                ConfirmPassword: $("#txtConfirmPassword").val(),
-                StaffCategory: staffCategory
-            },
-            success: function () {
-                clearRegistrationFields();
-                $("#successModal").modal('show');
-            },
-            error: function (jqXHR) {
-                $("#regDivErrorText").text(jqXHR.responseText);
-                $("#regDivError").show("fade");
-            }
-        });
-    });
-})();
+                    <div className="row">{/*row4 radio buttons*/}
+                        <div className="col s6">
+                            <p>
+                                <input name="group1" type="radio" id="employee" />
+                                <label htmlFor="employee">Employee</label>
+                            </p>
+                        </div>
+                        <div className="col s6">
+                            <p>
+                                <input name="group1" type="radio" id="manager" />
+                                <label htmlFor="manager">Manager</label>
+                            </p>
+                        </div>
+                    </div>{/*row4 ends here*/}
+
+                    <div className="row">{/*row 5 submit*/}
+                        <div className="col s6">
+                            <button className="btn waves-effect waves-light" type="submit" name="action">Submit
+                                <i className="material-icons right">send</i>
+                            </button>
+                        </div>
+                        <div className="col s6">
+                            <a href="#"><span style={{fontWeight:400, fontSize:20}}>Already have an account?</span></a>
+                        </div>
+                    </div>{/*row 5 ends here*/}
+
+                </form>
+            </div>
+        </div>
+    );
+}
+
+
+module.exports = RegistrationPage;

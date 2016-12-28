@@ -1,340 +1,91 @@
-﻿
+﻿import React from "react";
+import ReactDOM from "react-dom";
+import {render} from "react-dom";
 
-(function () { 
-    $("#logout-btn").on("click", managerLogout);
-    $("#add-income-btn").on("click", function () { $("#addIncomeModal").modal("show"); $("#toggler").bootstrapToggle("on"); });
-    $("#add-expense-btn").on("click", function () { $("#addExpenseModal").modal("show"); $("#toggler").bootstrapToggle("off");return false; });
-    $("#get-saved-expenses-btn").on("click", function () { getAllSavedExpenses(); $("#toggler").bootstrapToggle("off"); });
-    $("#get-saved-incomes-btn").on("click", function () { getAllSavedIncome(); $("#toggler").bootstrapToggle("on"); })// getAllSavedIncome);
-    $("#saveNewIncomeButton").on("click", saveNewIncome);
-    $("#saveNewExpenseBtn").on("click", function () { saveNewExpense(); });
-    $("#cancel").on("click", clearModalPopupFields);
-    $("#manager-monthly-income").on("click", function (e) { e.preventDefault(); getSavedIncomesByMonth(); $("#toggler").bootstrapToggle("on") })
-    $("#manager-yearly-income").on("click", function (e) { e.preventDefault(); getSavedIncomeByYear(); $("#toggler").bootstrapToggle("on") })
-    $("#manager-saved-incomes").on("click", function (e) { e.preventDefault(); getManagerSavedIncomes(); $("#toggler").bootstrapToggle("on"); })
-    $("#manager-saved-expenses").on("click", function (e) { e.preventDefault(); getManagerSavedExpenses(); $("#toggler").bootstrapToggle("off"); })
-    $("#manager-monthly-expenses").on("click", function (e) { e.preventDefault(); getMonthlyExpenses(); $("#toggler").bootstrapToggle("off"); });
-    $("#manager-yearly-expenses").on("click", function (e) { e.preventDefault(); getYearlyExpenses(); $("#toggler").bootstrapToggle("off"); })
-
-    function managerLogout() {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("userid");
-        sessionStorage.removeItem("username");
-        sessionStorage.removeItem("expires");
-        sessionStorage.removeItem("staffCategory");
-        displayLogin(true);
-        return false;
+class HighlightDisplay extends React.Component{
+    constructor(){
+        super();
+        this.state = {date: new Date()};
+        this.statement = "Current date:"
+        this.monthNames = [
+            "January", "February", "March",
+            "April", "May", "June", "July",
+            "August", "September", "October",
+            "November", "December"
+            ];
     }
-
-    function clearAll() {
-        var container = document.getElementById("table-container");
-        while (container.hasChildNodes()) {
-            container.removeChild(container.lastChild);
-        }
+    render(){
+        return (
+            <div className= "card medium pink-grey darken-1">
+                <div className="card-content blue-text">
+                    <span className="card-title">{this.props.values.category} for May 2017</span>
+                    <p><label>{this.statement} {this.state.date.getDate()} {this.monthNames[this.state.date.getMonth()]} {this.state.date.getYear()}</label></p>
+                    <p style={{fontWeight:400, fontSize:"50px"}}>
+                        $ {this.props.values.value}
+                    </p>
+                    {/*new line*/}
+                </div>
+                <div className="card-action">
+                    <a href="#">Add New {this.props.values.category}</a>
+                    <a href="#">See Your Saved {this.props.values.category}</a>
+                </div>
+            </div>
+        );
     }
+}
 
-    function clearModalPopupFields() {
-        $("#incomeDescription").val("");
-        $("#incomeAmount").val("");
-    }
 
-    function clearExpenseModalPopupFields() {
-        $("#expenseDescription").val("");
-        $("#expenseAmount").val("");
-    }
+class ManagerPage extends React.Component{
+    render(){
+        return (
+            <div>
+                {/*NAVIGSTION BAR*/}
+                <ul id="income-dropdown" className="dropdown-content">{/*income dropdown*/}
+                    <li><a href="#!">Monthly Income</a></li>
+                    <li><a href="#!">Yearly Income</a></li>
+                    <li><a href="#!">All Incomes</a></li>
+                </ul>
+
+                <ul id="expense-dropdown" className="dropdown-content">{/*expenses dropdown*/}
+                    <li><a href="#!">Monthly Expenses</a></li>
+                    <li><a href="#!">Yearly Expenses</a></li>
+                    <li><a href="#!">All Expenses</a></li>
+                </ul>
+
+
+                <nav>
+                    <div className="nav-wrapper" style={{marginLeft:"2%"}}>
+
+                        <a href="#" className="brand-logo">Manager Account</a>
+                        {/*HERE IS FOR MOBILE MENU VIEWS*/}
+                        <a href="#" data-activates="mobile-demo" className="button-collapse"><i className="material-icons">menu</i></a>
+                        
+                        <ul className="right hide-on-med-and-down">
+                            <li><a href="#">All Incomes</a></li>
+                            <li><a href="#">All Expenses</a></li>
+                            {/*DROPDOWNS*/}
+                            <li><a className="dropdown-button" href="#!" data-activates="income-dropdown">Income Options<i className="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a className="dropdown-button" href="#!" data-activates="expense-dropdown">Expenses Options<i className="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+
+                    </div>
+                </nav>
+
+                <div className="container">
+                    <div className="row">
+                        <div className="col s6">
+                            <HighlightDisplay values={{category:"Income", value:"40,000"}} />
+                        </div>
+                        <div className="col s6">
+                            <HighlightDisplay values={{category:"Expense", value:"35,000"}}/>
+                        </div>
+                    </div>
+                </div>
 
     
-    function getManagerSavedExpenses() {
-        var defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Expense/GetStaffExpenses?staffId=" + sessionStorage.getItem("userid"),
-            method: "GET",
-            contentType: "application/json",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearAll();
-                displayAllIncome(response, false);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
-        return defer.promise();
+
+        </div>);{/*MANAGER-PAGE ENDING*/}
     }
+}
 
-
-    function getAllSavedExpenses() {
-        defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Expense/Get",
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearAll();
-                displayAllIncome(response,false);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
-        return defer.promise();
-    }
-
-    function getYearlyExpenses() {
-        defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Expense/GetYearlyExpenses",
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearAll();
-                displayPeriodically(response);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
-        return defer.promise();
-    }
-
-    function getMonthlyExpenses() {
-        defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Expense/GetMonthlyExpenses",
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearAll();
-                displayPeriodically(response);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.respnseText);
-            }
-        });
-        return defer.promise();
-    }
-
-    function loadLoginPage() {
-        function displayLogin(status) {
-            if (status) {
-                $('#login-layout').addClass("hidden").removeClass("hidden")
-                $('#manager-layout').removeClass("hidden").addClass("hidden")
-            } else {
-                $('#login-layout').removeClass("hidden").addClass("hidden")
-                $('#manager-layout').addClass("hidden").removeClass("hidden")
-            }
-        }
-    }
-
-    function displayPeriodically(dto) {
-        $.each(dto, function (index, value) {
-            var div = document.createElement("div");
-            div.innerHTML = createPeriodicElement(index, value);
-            div.onclick = function () { alert('PERIODIC INCOMES HERE')};
-            var container = document.getElementById("table-container");
-            container.appendChild(div);
-        });
-    }
-
-    function getSavedIncomeByYear() {
-        var defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Income/GetYearlyIncome",
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearAll();
-                displayPeriodically(response);
-                $("#toggler").bootstrapToggle("on");
-                defer.resolve(true);
-            },
-            fail: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
-        return defer.promise();
-    }
-
-    function getSavedIncomesByMonth() {
-        var defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Income/GetMonthlyIncome",
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearAll();
-                displayPeriodically(response);
-                defer.resolve(true);
-            },
-            fail: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
-        return defer.promise();
-    }
-
-    function getManagerSavedIncomes() {
-        var defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Staff/GetSavedIncome?" + "StaffId=" + sessionStorage.getItem("userid"),
-            method: "GET",
-            //data: JSON.stringify(sessionStorage.getItem("userid")),
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                displayAllIncome(response);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
-        return defer.promise();
-    }
-
-    function getAllSavedIncome() {
-        var defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Income/Get",
-            //url: "api/Income/GetMonthlyIncome",
-            method: "GET",
-            headers:{
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                clearAll();
-                displayAllIncome(response);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.response);
-                defer.resolve(true);
-            }
-        });
-        return defer.promise();
-    }
-
-    function saveNewIncome() {
-        var income = {
-            Description: $("#incomeDescription").val(),
-            Amount: $("#incomeAmount").val(),
-            StaffId: sessionStorage.getItem("userid")
-        };
-        $.ajax({
-            url: "api/Income/Post",
-            method: "POST",
-            contentType: "application/json",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            data: JSON.stringify(income),
-            success: function () {
-                $("#addIncomeModal").modal("hide");
-                clearModalPopupFields();
-                getAllSavedIncome();
-                
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR);
-            }
-        }
-        );
-    };
-
-    function saveNewExpense() {
-        var expense = {
-            Description: $("#expenseDescription").val(),
-            Cost: $("#expenseAmount").val(),
-            StaffId: sessionStorage.getItem("userid")
-        };
-        $.ajax({
-            url: "api/Expense/Post",
-            contentType: "application/json",
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            data: JSON.stringify(expense),
-            success: function () {
-                $("#addExpenseModal").modal("hide");
-                clearExpenseModalPopupFields();
-                getAllSavedExpenses();
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.response);
-            }
-        });
-    }
-
-    function parseDate(cdate) {
-        var date = new Date(Date.parse(cdate));
-        return date.toISOString().split("T")[0];
-    }
-
-    function displayAllIncome(dto,status) {
-        var tableContainer = document.getElementById("table-container");
-        $.each(dto, function (index, values) {
-            var node = document.createElement("div");
-            node.id = values.id;
-            node.date = values.date;
-            node.onclick = function (e) { alert("PLEASE WORKKKKKKKK " + node.id) };
-            if (status == false) {
-                node.innerHTML = createElement(values.description, values.cost, parseDate(values.dateCreated));
-            }
-            else
-                node.innerHTML = createElement(values.description, values.amount, parseDate(values.dateCreated));
-            tableContainer.appendChild(node);
-        })
-    }
-
-    function createElement(description, amount, date) {
-        var div = "<div class='list-group'> "
-            + "<a href='javascript:void(0)' class='list-group-item active'}>"
-            + "<h4 class='list-group-item-heading'>" + date + "</h4>"
-            + "<h4 class='list-group-item-heading'>" + description + "</h4>"
-            + "<p class='list-group-item-text'>"
-            + "<label>" + "$" + amount + "</label>" + "</p>" + "</a>"
-            + "</div>";
-        return div;
-    }
-
-    function createPeriodicElement(period, amount) {
-        var div = "<div class='list-group'> "
-            + "<a href='javascript:void(0)' class='list-group-item active'}>"
-            + "<h4 class='list-group-item-heading'>" + period + "</h4>"
-            + "<p class='list-group-item-text'>"
-            + "<label>" + "$" + amount + "</label>" + "</p>" + "</a>"
-            + "</div>";
-        return div;
-    }
-
-    $('#menu1').children().first().on('click', function (e) {
-        e.preventDefault();
-        console.log("Holla");
-    })
-    $('#menu1 ul li:nth-child(2)')
-})()
+module.exports = ManagerPage;

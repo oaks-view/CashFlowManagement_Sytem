@@ -1,87 +1,66 @@
-﻿$(function () {
-    function loadManagerPage() {
-        $("#mainWindow").load("/templates/ManagerPage.html");
-        //$.getScript("/Scripts/bootstrap.min.js");
-        $.getScript("/Scripts/App/ManagerSession.js");
-    };
+﻿import ReactDOM from "react-dom";
+import React from "react";
+import {render} from "react-dom";
+import $ from "jquery";
 
 
-    function registerStaff() {
-        $.ajax({
-            url: "api/Staff",
-            method: "Post",
-            contentType: "application/json",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
-        });
+const formBackground = {
+    display: 'inline-block', 
+    padding: '32px 48px 0px 48px', 
+    border:'1px solid #EEE'
+};
+
+function LoginPage(props){
+    return (<div>
+        <main>
+        <center>
+        <div className="section"></div>
+
+        <h5 className="indigo-text">Please, login into your account</h5>
+        <div className="section"></div>
+
+        <div className="container">
+            <div className="z-depth-1 grey lighten-4 row" style={formBackground}>
+
+            <form className="col s12" method="post">
+                <div className='row'>
+                <div className='col s12'>
+                </div>
+                </div>
+
+                <div className='row'>
+                <div className='input-field col s12'>
+                    <input className='validate' type='email' name='email' id='email' />
+                    <label htmlFor='email'>Enter your email</label>
+                </div>
+                </div>
+
+                <div className='row'>
+                <div className='input-field col s12'>
+                    <input className='validate' type='password' name='password' id='password' />
+                    <label htmlFor='password'>Enter your password</label>
+                </div>
+                <label style={{float: 'right'}}>
+                                    <a className='pink-text' href='#!'><b>Forgot Password?</b></a>
+                                </label>
+                </div>
+
+                <br />
+                <center>
+                <div className='row'>
+                    <button onClick={props.onClick} type='submit' name='btn_login' className='col s12 btn btn-large waves-effect indigo'>Login</button>
+                </div>
+                </center>
+            </form>
+            </div>
+        </div>
+        <a href="#!">Create account</a>
+        </center>
+
+        <div className="section"></div>
+        <div className="section"></div>
+    </main>
+        </div>);
     }
 
-    function GetStaffDetails() {
-        var defer = jQuery.Deferred()
-        var userid = sessionStorage.getItem("userid");
-        $.ajax({
-            url: "api/Staff",
-            method: "GET",
-            data: { userId: userid },
-            headers: {
-                "Authorization": "Bearer" + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                sessionStorage.setItem("currentStaff", response);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.reponse);
-                defer.resolve(true);
-            }
-        })
-        return defer.promise();
-    }
-
-    $("#linkClose").on("click", function () {
-        $("#divError").hide('fade');
-    });
-    alert("WE ARE INTHE PAGE");
-
-    $("#register-btn-top").on("click", function () {
-        alert("A NEW WAY TO CODE");
-        $("#mainWindow").load("/templates/Registration.html");
-        $.getScript("/Scripts/App/Registration.js");
-    });
-
-
-    $("#login-btn").on("click", function () {
-        $.ajax({
-            url: "/token",
-            method: "POST",
-            contentType: "application/json",
-            data: {
-                Username: $("#txtEmailLogin").val(),
-                Password: $("#txtPasswordLogin").val(),
-                grant_type: "password"
-            },
-            success: function (response) {
-                sessionStorage.setItem("accessToken", response.access_token);
-                sessionStorage.setItem('expires', response['.expires']);
-                sessionStorage.setItem('username', response.userName);
-                sessionStorage.setItem('userid', response.userId);
-                console.log(response);
-                registerStaff();
-                //GetStaffDetails();
-                loadManagerPage();
-
-            },
-            error: function (jqXHR) {
-                $("#divErrorText").text(jqXHR.responseText);
-                $("#divError").show("fade");
-            }
-        });
-    })
-})();
+module.exports = LoginPage;
