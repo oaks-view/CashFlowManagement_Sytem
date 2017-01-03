@@ -88,5 +88,11 @@ namespace CashFlowManagement.Web.Controllers
             }
             return Ok(staffExpenses);
         }
+
+        public IHttpActionResult GetCurrentMonthTotalExpenses(string staffId)
+        {
+            var totalExpenses = _expenseService.StaffTotalExpensesForThisMonth(staffId);
+            return Ok(totalExpenses);
+        }
     }
 }

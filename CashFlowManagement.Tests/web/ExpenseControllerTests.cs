@@ -59,6 +59,12 @@ namespace CashFlowManagement.Tests.web
                 {
                     return _sampleExpenses.Where(e => e.StaffId == input).ToList();
                 });
+            _mockExpenseService
+                .Setup(x => x.StaffTotalExpensesForThisMonth(It.IsAny<string>()))
+                .Returns((string input) =>
+                {
+                    return _sampleExpenses.Where(e => e.StaffId == input).Sum(x => x.Cost);
+                }).Verifiable();
         }
         [TestMethod, TestCategory(Constants.UnitTest)]
         public void Get_Can_Retrieve_All_Saved_Expenses()
@@ -138,6 +144,16 @@ namespace CashFlowManagement.Tests.web
             var controller = new ExpenseController(_mockExpenseService.Object);
             var apiCallValue = controller.GetStaffExpenses(sampleEmployee.Id);
             Assert.IsInstanceOfType(apiCallValue, typeof(OkNegotiatedContentResult<List<Expense>>));
+        }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void CurrentMonthTotalExpenses_Works_Correctly()
+        {
+            var controller = new ExpenseController(_mockExpenseService.Object);
+            var apiCallValue = controller.CurrentMonthTotalExpenses(sampleEmployee.Id);
+            _mockExpenseService.Verify(x => x.StaffTotalExpensesForThisMonth(It.Is<string>(input =>
+            input == sampleEmployee.Id)));
+            Assert.IsInstanceOfType(apiCallValue, typeof(OkNegotiatedContentResult<int>));
         }
     }
 }

@@ -67,5 +67,14 @@ namespace CashFlowManagement.Core.Services
                 .ToList<Expense>();
             return SortedList(staffExpenses);
         }
+
+        public int StaffTotalExpensesForThisMonth(string staffId)
+        {
+            var staffExpenses = GetStaffExpenses(staffId);
+            var currentMonth = DateTime.Now.Month;
+            return staffExpenses
+                .Where(x => x.DateCreated.Month == currentMonth)
+                .Sum(x => x.Cost);
+        }
     }
 }

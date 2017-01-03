@@ -1,108 +1,100 @@
-﻿(function () {
-    $("#emp-logout-btn").on("click", employeeLogout);
-    $("#emp-cancel").on("click", clearExpenseModalFields);
-    $("#emp-saveNewExpenseBtn").on("click", function () { saveNewExpense(); });
-    $("#emp-get-saved-expenses-btn").on("click", function () { getExployeeExpenses(); });
+﻿import React from "react";
+import ReactDOM from "react-dom";
+import {Router, Route, Link, IndexRoute, hashHistory, browserHistory} from "react-router";
+import {HighlightDisplay} from "./ManagerSession";
+import {ExpensePage, formBackground,addCommas} from "./sharedPages";
+import {getStaffExpenses,getStaffCurrentMonthTotalExpenses} from "./apiCalls";
+import {SavedExpensesPage} from "./savedExpensePage";
+const ReactNotify = require('react-notify');
+
+class EmployeeNav extends React.Component {
+    constructor(){
+        super();
+        this.state = {activeTab:"Summary"};
+        this.handleLogout = this.handleLogout.bind(this);
+        this.changeActiveStatus = this.changeActiveStatus.bind(this);
+    }
+    changeActiveStatus(e){
+        console.log(e.target.id);
+        this.setState({activeTab: e.target.id});
+    }
+    
+    handleLogout(){
+        this.props.onClick();
+    }
+
+    render(){
+        return (
+            <div>
+                <nav>
+                    <div className="nav-wrapper" style={{ marginLeft: "2%", marginRight:"2%"}}>
+                        <a href="#" className="brand-logo">EmployeesLogin</a>
+                        <ul id="nav-mobile" className="right hide-on-med-and-down">
+                            <li className={(this.state.activeTab==="Summary")?"active":""}>
+                                <a id="Summary"  href="#" onClick={this.changeActiveStatus}>Summary</a>
+                            </li>
+                            <li className={(this.state.activeTab==="AllExpenses")?"active":""}>
+                                <a id="AllExpenses" onClick={this.changeActiveStatus} href="#saved-expenses">All Expenses</a>
+                            </li>
+                            <li ><a href="#" onClick={this.handleLogout}>logout</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <Router history={hashHistory}>
+                    <Route path="/" component={EmployeeHomePage}/>
+                    <Route path="/save-expense" component={EmployeeExpensePage}/>
+                    <Route path="/saved-expenses" component={SavedExpensesPage}/>
+                </Router>
+            </div>
+        )
+    }
+}
+
+class EmployeeExpensePage extends React.Component {
+    constructor(){
+        super();
+    }
+
+    render(){
+        return (
+            <ExpensePage/>
+        )
+    }
+}
 
 
-    function getExployeeExpenses() {
-        var defer = jQuery.Deferred();
-        $.ajax({
-            url: "api/Expense/GetStaffExpenses?staffId=" + sessionStorage.getItem("userid"),
-            method: "GET",
-            contentType: "application/json",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            success: function (response) {
-                console.log(response);
-                clearExpenseData();
-                displayAllExpenses(response);
-                defer.resolve(true);
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.responseText);
-            }
+class EmployeeHomePage extends React.Component {
+    constructor(){
+        super();
+        this.state = {
+            monthTotal:0, 
+            yearTotal:0
+        };
+        this.showNotification = this.showNotification.bind(this);
+    }
+    componentDidMount(){
+        getStaffCurrentMonthTotalExpenses((response)=>{
+            let totalExpense = 
+            this.setState({monthTotal: addCommas(response)});
         });
-        return defer.promise();
     }
 
-    function saveNewExpense() {
-        var expense = {
-            Description: $("#emp-expenseDescription").val(),
-            Cost: $("#emp-expenseAmount").val(),
-            StaffId: sessionStorage.getItem("userid")
-        }
-
-        $.ajax({
-            url: "api/Expense/Post",
-            contentType: "application/json",
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + sessionStorage.getItem("accessToken")
-            },
-            data: JSON.stringify(expense),
-            success: function () {
-                $("#emp-addExpenseModal").modal("hide");
-                clearExpenseModalFields();
-                getExployeeExpenses();
-            },
-            error: function (jqXHR) {
-                console.log(jqXHR.response);
-                $("#emp-expenseAmount").val("");
-            }
-        });
+    showNotification(e){
+        e.preventDefault();
+        this.notify.success("Hi Moses","Succesfully added expense","$ 40,000");
     }
-
-    function clearExpenseModalFields() {
-        $("#emp-expenseDescription").val("");
-        $("#emp-expenseAmount").val("");
+    render(){
+        return (
+            <div className = "container">
+                <div className = "row">
+                    <div className="col s12">
+                        <HighlightDisplay values={{category: "Expense", value: this.state.monthTotal}}/>
+                    </div>
+                </div>
+            </div>
+        ) 
     }
-
-    function clearExpenseData() {
-        var container = document.getElementById("emp-table-container");
-        while (container.hasChildNodes()) {
-            container.removeChild(container.lastChild);
-        }
-    }
+}
 
 
-
-    function parseDate(cdate) {
-        var date = new Date(Date.parse(cdate));
-        return date.toISOString().split("T")[0];
-    }
-
-    function displayAllExpenses(dto) {
-        var tableContainer = document.getElementById("emp-table-container");
-        $.each(dto, function (index, values) {
-            var node = document.createElement("div");
-            node.id = values.id;
-            node.date = values.date;
-            node.onclick = function (e) { alert("PLEASE WORKKKKKKKK " + node.id) };
-            node.innerHTML = createElement(values.description, values.cost, parseDate(values.dateCreated));
-            tableContainer.appendChild(node);
-        })
-    }
-
-    function createElement(description, amount, date) {
-        var div = "<div class='list-group'> "
-            + "<a href='javascript:void(0)' class='list-group-item active'}>"
-            + "<h4 class='list-group-item-heading'>" + date + "</h4>"
-            + "<h4 class='list-group-item-heading'>" + description + "</h4>"
-            + "<p class='list-group-item-text'>"
-            + "<label>" + "$" + amount + "</label>" + "</p>" + "</a>"
-            + "</div>";
-        return div;
-    }
-
-    function employeeLogout() {
-        sessionStorage.removeItem("accessToken");
-        sessionStorage.removeItem("userid");
-        sessionStorage.removeItem("username");
-        sessionStorage.removeItem("expires");
-        sessionStorage.removeItem("staffCategory");
-        clearExpenseData();
-        displayLogin(true);
-    }
-})()
+export default EmployeeNav;

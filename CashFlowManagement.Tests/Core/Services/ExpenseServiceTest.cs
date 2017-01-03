@@ -138,5 +138,17 @@ namespace CashFlowManagement.Tests.Core.Services
             var dbExpenses = service.GetStaffExpenses(sampleEmployee.Id);
             Assert.AreEqual(staffExpenses.Count, dbExpenses.Count);       
         }
+
+        [TestMethod, TestCategory(Constants.UnitTest)]
+        public void Can_Get_Total_Expenses_For_Current_Month()
+        {
+            var service = new ExpenseService(_mockExpenseRepo.Object);
+            int totalExpenses = service.StaffTotalExpensesForThisMonth(sampleEmployee.Id);
+            var currentMonth = DateTime.Now.Month;
+            var staffExpenses = _sampleExpenses.Where(x => x.StaffId == sampleEmployee.Id && x.DateCreated.Month == currentMonth)
+                .ToList<Expense>();
+            var expensesSum = staffExpenses.Sum(x => x.Cost);
+            Assert.AreEqual(expensesSum, totalExpenses);
+        }
     }
 }

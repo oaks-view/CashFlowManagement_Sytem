@@ -1,35 +1,52 @@
 ﻿import ReactDOM from "react-dom";
 import {render} from "react-dom";
 import React from "react";
-import LoginPage from "./Login";
-import RegistrationPage from "./Registration";
+//import LoginPage from "./Login";
+//import RegistrationPage from "./Registration";
+import LoginOrRegister from "./LoginOrRegister";
 import ManagerPage from "./ManagerSession";
+import EmployeePage from "./EmployeeSession";
 
-function renderPage(component){
-    render(component, document.getElementById("page-container"));
-}
 
- class PageManager extends React.Component{//THIS IS D MAIN COMPONENT
+ class PageManager extends React.Component{
     constructor(){
         super();
-        this.state = {loginStatus:"NotLoggedIn"};
-        this.userId;
-        this.staffCategory;
+        this.state = {
+            userId:window.sessionStorage.getItem('accessToken'),
+            staffCategory: sessionStorage.getItem('staffCategory')
+        };
+        this.handleLogin =  this.handleLogin.bind(this);
+        this.handleLogout =  this.handleLogout.bind(this);
     }
 
-    handleLogin(){
-        this.setState({loginStatus:"LoggedIn"});
-        this.state.loginStatus = "LoggedIn";
-        //this.forceUpdate();
+    handleLogin(credentials){
+        this.setState({userId: credentials.userId});
+        this.setState({staffCategory: sessionStorage.getItem("staffCategory")});
+    }
+    handleLogout(){
+        this.setState({userId: null});
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("expires");
+        sessionStorage.removeItem("staffCategory");
+        sessionStorage.removeItem("userid");
+        sessionStorage.removeItem("username");
+    }
+
+    staffPage(staffCategory){
+        let page = this.state.staffCategory == "3366" ? <ManagerPage logout = {this.handleLogout} /> : 
+        <EmployeePage onClick={this.handleLogout} />;
+        return page;
     }
 
     render(){
-        if (this.state.loginStatus == "NotLoggedIn"){
-            return <LoginPage onClick = {()=> this.handleLogin()}/>
-        }
-        else if(this.state.loginStatus == "LoggedIn"){
-            return <ManagerPage/>
-        }
+        return (
+            <div>
+            {this.state.userId ? 
+               this.staffPage(this.staffCategory)
+               : <LoginOrRegister onClick={this.handleLogin}/>
+            }
+            </div>
+        )        
     }
 }
 
